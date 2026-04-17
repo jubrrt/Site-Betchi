@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Petit site privé</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --card: rgba(255,255,255,0.08);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #f8c3d8;
+      --accent2: #c4b5fd;
+      --ok: #bbf7d0;
+      --shadow: 0 20px 50px rgba(0,0,0,0.28);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(248,195,216,0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(196,181,253,0.18), transparent 25%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .screen { display: none; animation: fade 0.45s ease; }
+    .screen.active { display: block; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      padding: 28px;
+    }
+
+    h1, h2, p { margin-top: 0; }
+    h1 { font-size: clamp(2rem, 4vw, 3.3rem); margin-bottom: 12px; }
+    p { line-height: 1.6; }
+    .muted { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 0.96rem;
+      color: var(--muted);
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(248,195,216,0.6);
+      box-shadow: 0 0 0 3px rgba(248,195,216,0.15);
+    }
+
+    .hint-box {
+      background: rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(3, 96px);
+      gap: 12px;
+      justify-content: center;
+      margin: 22px 0 16px;
+    }
+
+    .slot-window {
+      height: 110px;
+      width: 96px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 18px;
+      background: rgba(8,15,30,0.45);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .slot-track {
+      transform: translateY(0px);
+      transition: transform 1450ms cubic-bezier(.2,.85,.22,1);
+    }
+
+    .slot-item {
+      height: 110px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.4rem;
+    }
+
+    .slot-highlight {
+      position: absolute;
+      inset: 50% 4px auto 4px;
+      transform: translateY(-50%);
+      height: 110px;
+      border-radius: 14px;
+      border: 2px solid rgba(248,195,216,0.45);
+      pointer-events: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: 0.6; cursor: wait; }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #1f1630;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .status {
+      min-height: 24px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .status.ok { color: var(--ok); }
+
+    .reveal {
+      text-align: center;
+    }
+
+    .photo-frame {
+      margin: 24px auto 18px;
+      max-width: 640px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .photo-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .message {
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      body { padding: 12px; }
+      .card { padding: 18px; }
+      .slots { grid-template-columns: repeat(3, 84px); }
+      .slot-window { width: 84px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="gateScreen" class="screen active">
+      <div class="card">
+        <h1>Petit voyage privé ✈️</h1>
+        <p class="muted">
+          Pour entrer, il faut retrouver deux dates. Une fois validées, les trois avions s’alignent et la surprise apparaît.
+        </p>
+
+        <div class="grid">
+          <div>
+            <div class="field">
+              <label for="date1">Première date</label>
+              <input id="date1" type="text" placeholder="Ex : 14.02.24" />
+            </div>
+
+            <div class="field">
+              <label for="date2">Deuxième date</label>
+              <input id="date2" type="text" placeholder="Ex : 07.09.24" />
+            </div>
+
+            <div class="actions">
+              <button id="checkButton" class="primary" type="button">Essayer le mot de passe</button>
+              <button id="resetButton" class="secondary" type="button">Réinitialiser</button>
+            </div>
+
+            <div id="status" class="status">Entre les deux bonnes dates pour lancer la séquence.</div>
+          </div>
+
+          <div class="hint-box">
+            <h2>Indices</h2>
+            <p class="muted">Tu peux remplacer ce bloc par deux indices très courts.</p>
+            <p>📅 <strong>Indice 1 :</strong> la date d’un premier souvenir clé.</p>
+            <p>📅 <strong>Indice 2 :</strong> la date d’un moment qui compte pour vous.</p>
+            <p class="muted" style="margin-top:14px;">Les dates attendues se modifient dans le script : <code>answer1</code> et <code>answer2</code>.</p>
+          </div>
+        </div>
+
+        <div class="slots">
+          <div class="slot-window">
+            <div class="slot-highlight"></div>
+            <div id="track1" class="slot-track"></div>
+          </div>
+          <div class="slot-window">
+            <div class="slot-highlight"></div>
+            <div id="track2" class="slot-track"></div>
+          </div>
+          <div class="slot-window">
+            <div class="slot-highlight"></div>
+            <div id="track3" class="slot-track"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="finalScreen" class="screen">
+      <div class="card reveal">
+        <h1>Destination trouvée ✨</h1>
+        <p class="message">
+          Ici tu mets ton texte final. Une phrase simple marche très bien. Par exemple :
+          <br /><br />
+          <strong>"J’avais envie de te faire un petit clin d’œil rien qu’à toi."</strong>
+        </p>
+
+        <div class="photo-frame">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Photo souvenir" />
+        </div>
+
+        <p class="message">
+          Remplace cette image par ta photo en changeant simplement le <code>src</code> de la balise <code>img</code>.
+        </p>
+
+        <div class="actions" style="justify-content:center; margin-top:22px;">
+          <button id="backButton" class="secondary" type="button">← Revenir au début</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const answer1 = "14.02.24";
+    const answer2 = "07.09.24";
+    const planePool = ["✈️", "🛩️", "🛫", "🛬"];
+    const correctCombo = ["✈️", "✈️", "✈️"];
+    const repeats = 9;
+    const itemHeight = 110;
+
+    const gateScreen = document.getElementById("gateScreen");
+    const finalScreen = document.getElementById("finalScreen");
+    const checkButton = document.getElementById("checkButton");
+    const resetButton = document.getElementById("resetButton");
+    const backButton = document.getElementById("backButton");
+    const statusEl = document.getElementById("status");
+    const date1Input = document.getElementById("date1");
+    const date2Input = document.getElementById("date2");
+
+    const tracks = [
+      document.getElementById("track1"),
+      document.getElementById("track2"),
+      document.getElementById("track3")
+    ];
+
+    function normalize(value) {
+      return value.trim().replace(/\s+/g, "");
+    }
+
+    function buildTrack(trackEl, finalIcon) {
+      const sequence = [];
+      for (let i = 0; i < repeats; i += 1) {
+        sequence.push(planePool[Math.floor(Math.random() * planePool.length)]);
+      }
+      sequence.push(finalIcon);
+      trackEl.innerHTML = sequence.map(icon => `<div class="slot-item">${icon}</div>`).join("");
+      trackEl.dataset.finalIndex = String(sequence.length - 1);
+      trackEl.style.transform = "translateY(0px)";
+    }
+
+    function prepareSlots() {
+      tracks.forEach((track, index) => buildTrack(track, correctCombo[index]));
+    }
+
+    function launchSlots() {
+      checkButton.disabled = true;
+      statusEl.textContent = "Décollage en cours…";
+      statusEl.className = "status";
+
+      tracks.forEach((track, index) => {
+        buildTrack(track, correctCombo[index]);
+        const offset = Number(track.dataset.finalIndex) * itemHeight;
+        setTimeout(() => {
+          track.style.transform = `translateY(-${offset}px)`;
+        }, index * 170);
+      });
+
+      setTimeout(() => {
+        statusEl.textContent = "Accès validé.";
+        statusEl.className = "status ok";
+        gateScreen.classList.remove("active");
+        finalScreen.classList.add("active");
+        checkButton.disabled = false;
+      }, 2200);
+    }
+
+    function checkAnswers() {
+      const a1 = normalize(date1Input.value);
+      const a2 = normalize(date2Input.value);
+
+      if (a1 === normalize(answer1) && a2 === normalize(answer2)) {
+        launchSlots();
+      } else {
+        statusEl.textContent = "Ce ne sont pas les bonnes dates. Réessaie encore ✨";
+        statusEl.className = "status";
+      }
+    }
+
+    function resetAll() {
+      date1Input.value = "";
+      date2Input.value = "";
+      statusEl.textContent = "Entre les deux bonnes dates pour lancer la séquence.";
+      statusEl.className = "status";
+      finalScreen.classList.remove("active");
+      gateScreen.classList.add("active");
+      prepareSlots();
+    }
+
+    checkButton.addEventListener("click", checkAnswers);
+    resetButton.addEventListener("click", resetAll);
+    backButton.addEventListener("click", resetAll);
+    date2Input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") checkAnswers();
+    });
+
+    prepareSlots();
+  </script>
+</body>
+</html>

@@ -2,32 +2,30 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Betchi</title>
   <style>
     :root {
       --bg: #fbfaf7;
-      --paper: rgba(255,255,255,0.82);
+      --paper: rgba(255,255,255,0.9);
       --line: rgba(193, 96, 63, 0.14);
       --line-strong: rgba(193, 96, 63, 0.24);
       --text: #241d1a;
       --muted: #7e736d;
       --accent: #d86f4d;
       --accent-2: #e38b67;
-      --heart: rgba(216, 111, 77, 0.24);
       --shadow: 0 18px 40px rgba(101, 74, 58, 0.08);
       --radius: 24px;
-      --step: 136px;
     }
 
     * { box-sizing: border-box; }
-
     html, body {
       margin: 0;
       min-height: 100%;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
@@ -39,32 +37,22 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 1;
       z-index: 0;
       background-image:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23d86f4d' stroke-opacity='0.16' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M38 54l20 0m-10 -10l0 20'/%3E%3Cpath d='M95 58c9 0 14 6 14 14c0 8-5 14-14 14c-9 0-14-6-14-14c0-8 5-14 14-14z'/%3E%3Cpath d='M150 46c7 0 13 6 13 13s-6 13-13 13-13-6-13-13 6-13 13-13z'/%3E%3Cpath d='M170 109l18-8l-8 18'/%3E%3Cpath d='M45 142c12-8 24-8 36 0'/%3E%3Cpath d='M111 132l14 0'/%3E%3Cpath d='M108 129l3 3l-3 3'/%3E%3Cpath d='M152 153c5-3 10-3 15 0'/%3E%3Cpath d='M179 153c5-3 10-3 15 0'/%3E%3Cpath d='M52 191c4-7 10-7 14 0c-4 7-10 7-14 0z'/%3E%3Cpath d='M95 182c5-6 11-6 16 0'/%3E%3Cpath d='M144 184c0-7 5-12 12-12c7 0 12 5 12 12'/%3E%3Cpath d='M186 189l12-12'/%3E%3Cpath d='M186 177l12 12'/%3E%3Cpath d='M212 52c3-5 8-5 11 0c-3 5-8 5-11 0z'/%3E%3C/g%3E%3Cg fill='%23d86f4d' fill-opacity='0.14'%3E%3Cpath d='M25 24c2-4 7-4 9 0c2-4 7-4 9 0c0 5-9 10-9 10s-9-5-9-10z'/%3E%3Cpath d='M198 126c1.5-3 5-3 6.5 0c1.5-3 5-3 6.5 0c0 3.5-6.5 7-6.5 7s-6.5-3.5-6.5-7z'/%3E%3Cpath d='M117 216c1.8-3.3 5.8-3.3 7.6 0c1.8-3.3 5.8-3.3 7.6 0c0 4.2-7.6 8.2-7.6 8.2s-7.6-4-7.6-8.2z'/%3E%3C/g%3E%3C/svg%3E");
       background-size: 260px 260px;
-      background-position: 0 0;
     }
 
     .app {
       position: relative;
       z-index: 1;
-      width: 100%;
-      max-width: 1120px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 28px 18px 40px;
+      padding: max(16px, env(safe-area-inset-top)) 14px max(28px, env(safe-area-inset-bottom));
     }
 
     .screen { display: none; }
     .screen.active { display: block; }
-
-    .gate-wrap {
-      min-height: calc(100vh - 68px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
 
     .card {
       background: var(--paper);
@@ -74,53 +62,73 @@
       box-shadow: var(--shadow);
     }
 
+    .gate-wrap {
+      min-height: calc(100vh - 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .gate-card {
       width: 100%;
-      max-width: 960px;
-      padding: 44px 38px 34px;
+      padding: 22px 16px 18px;
       text-align: center;
     }
 
     .eyebrow {
       margin: 0 0 10px;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
       font-weight: 700;
     }
 
-    h1, h2, h3, p { margin-top: 0; }
-
     .title {
-      margin-bottom: 10px;
-      font-size: clamp(2rem, 5vw, 4.2rem);
+      margin: 0 0 18px;
+      font-size: clamp(1.9rem, 8vw, 3.4rem);
       line-height: 0.95;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--accent);
       font-weight: 800;
     }
 
-    .subtitle {
-      max-width: 560px;
-      margin: 0 auto 24px;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 1rem;
+    .security-block {
+      text-align: left;
+      margin: 0 auto 16px;
+      max-width: 420px;
     }
 
-    .gate-field {
-      max-width: 340px;
-      margin: 24px auto 0;
-      display: grid;
-      gap: 10px;
+    .security-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .security-text {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.96rem;
+    }
+
+    .hint-inline {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 8px;
     }
 
     input, textarea {
       width: 100%;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.72);
+      background: rgba(255,255,255,0.82);
       border-radius: 16px;
       padding: 14px 16px;
       font: inherit;
@@ -128,10 +136,7 @@
       outline: none;
     }
 
-    textarea {
-      min-height: 112px;
-      resize: vertical;
-    }
+    textarea { min-height: 108px; resize: vertical; }
 
     input:focus, textarea:focus {
       border-color: var(--line-strong);
@@ -146,7 +151,7 @@
       font: inherit;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+      transition: transform 120ms ease, opacity 120ms ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -169,44 +174,29 @@
     }
 
     .status {
-      min-height: 24px;
-      margin-top: 12px;
+      min-height: 22px;
+      margin-top: 10px;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
-    .status.ok { color: #5e8d56; }
     .status.error { color: #bf5d43; }
+    .status.ok { color: #5e8d56; }
 
-    .slots-shell {
-      position: relative;
-      margin: 28px auto 0;
-      max-width: 820px;
-      padding: 0 12px;
-    }
-
+    .slots-shell { margin: 18px auto 22px; }
     .slots-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      align-items: stretch;
-    }
-
-    .slot-col {
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
-      align-items: center;
     }
 
     .slot-window {
       position: relative;
-      width: 100%;
-      height: 170px;
+      height: 154px;
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255,255,255,0.65);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.72);
     }
 
     .slot-window::before,
@@ -235,7 +225,7 @@
       left: 10px;
       right: 10px;
       top: 50%;
-      height: 118px;
+      height: 102px;
       transform: translateY(-50%);
       border: 1.5px solid var(--line-strong);
       border-radius: 18px;
@@ -250,48 +240,30 @@
     }
 
     .slot-item {
-      height: 118px;
+      height: 102px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       text-align: center;
       padding: 8px;
     }
 
-    .slot-icon {
-      font-size: 2.25rem;
-      line-height: 1;
-      color: #6e625d;
-    }
-
+    .slot-icon { font-size: 2rem; line-height: 1; color: #6e625d; }
     .slot-label {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
       font-weight: 700;
     }
 
-    .manual-row {
-      display: flex;
-      justify-content: center;
-      margin-top: 6px;
-    }
-
-    .menu-screen {
-      animation: fadeIn 300ms ease;
-    }
-
-    .countdown-top {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
+    .menu-screen { animation: fadeIn 300ms ease; }
+    .countdown-top { text-align: center; margin-bottom: 22px; }
     .big-time {
-      margin: 0 0 16px;
-      font-size: clamp(2rem, 5vw, 3.4rem);
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 8vw, 3.1rem);
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -301,78 +273,66 @@
     .countdown-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      max-width: 740px;
-      margin: 0 auto;
+      gap: 8px;
     }
 
     .time-box {
-      background: rgba(255,255,255,0.74);
+      background: rgba(255,255,255,0.78);
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px 12px;
+      border-radius: 16px;
+      padding: 14px 8px;
       box-shadow: var(--shadow);
     }
 
     .time-box strong {
       display: block;
-      font-size: 1.9rem;
+      font-size: 1.5rem;
       color: var(--accent);
       margin-bottom: 4px;
     }
 
     .time-box span {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: var(--muted);
       font-weight: 700;
     }
 
-    .menu-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
-      gap: 22px;
-      align-items: start;
-    }
+    .menu-layout { display: grid; gap: 16px; }
+    .section-card, .sidebar-card, .pilot-card { padding: 18px; }
 
-    .section-card {
-      padding: 24px;
-    }
-
-    .section-head {
-      margin-bottom: 18px;
-    }
-
-    .section-head h2 {
-      margin-bottom: 8px;
+    .section-head h2, .sidebar-title, .pilot-card h3 {
+      margin: 0 0 8px;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      font-size: 1.15rem;
+      font-size: 0.98rem;
     }
 
-    .section-head p {
+    .section-head p, .pilot-card p, .note, .special-text {
       margin: 0;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.55;
+      font-size: 0.94rem;
     }
 
     .menu-list {
       display: grid;
       gap: 10px;
+      margin-top: 16px;
     }
 
     .menu-item {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 14px;
-      padding: 14px 14px;
+      gap: 12px;
+      padding: 13px 12px;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.7);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.78);
     }
 
     .menu-item input[type="checkbox"] {
@@ -382,137 +342,49 @@
       accent-color: var(--accent);
     }
 
-    .menu-label {
-      font-size: 0.98rem;
-      line-height: 1.4;
-    }
+    .menu-label { font-size: 0.95rem; line-height: 1.35; }
+    .price { font-weight: 800; color: var(--accent); white-space: nowrap; }
+    .random-action { grid-template-columns: auto 1fr auto; }
+    .random-action button { padding: 10px 14px; }
 
-    .price {
-      font-weight: 800;
-      color: var(--accent);
-      white-space: nowrap;
-    }
-
-    .special-request {
-      margin-top: 18px;
-      display: grid;
-      gap: 12px;
-    }
-
+    .special-request { margin-top: 18px; display: grid; gap: 10px; }
     .special-title {
       margin: 0;
       color: var(--accent);
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 700;
     }
 
-    .special-text {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .sidebar-card {
-      padding: 24px;
-      position: sticky;
-      top: 18px;
-    }
-
-    .sidebar-title {
-      margin-bottom: 14px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 1rem;
-    }
-
     .cart-total {
-      font-size: 2rem;
+      font-size: 1.85rem;
       font-weight: 800;
       color: var(--text);
       margin-bottom: 6px;
     }
 
-    .cart-remaining {
-      color: var(--muted);
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
-
-    .summary-list {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
+    .cart-remaining { color: var(--muted); margin-bottom: 14px; line-height: 1.5; font-size: 0.94rem; }
+    .summary-list { display: grid; gap: 9px; margin-bottom: 16px; }
     .summary-row {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.4;
-    }
-
-    .sidebar-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .note {
       color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.94rem;
-      margin: 0 0 18px;
-    }
-
-    .danger-note {
-      min-height: 20px;
-      color: #bf5d43;
       font-size: 0.9rem;
-      margin-top: 6px;
+      line-height: 1.35;
     }
 
-    .pilot-card {
-      margin-top: 18px;
-      padding: 20px;
-    }
-
-    .pilot-card h3 {
-      margin-bottom: 8px;
-      color: var(--accent);
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .pilot-card p {
-      margin-bottom: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+    .sidebar-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .danger-note { min-height: 20px; color: #bf5d43; font-size: 0.88rem; margin-top: 6px; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 980px) {
-      .slots-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .menu-layout { grid-template-columns: 1fr; }
-      .sidebar-card { position: static; }
-    }
-
-    @media (max-width: 640px) {
-      .app { padding: 14px 12px 28px; }
-      .gate-card, .section-card, .sidebar-card, .pilot-card { padding: 18px; }
-      .slots-grid { grid-template-columns: 1fr; }
-      .countdown-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .sidebar-actions { grid-template-columns: 1fr; }
-      .menu-item { grid-template-columns: auto 1fr; }
-      .price { grid-column: 2; }
+    @media (max-width: 420px) {
+      .sidebar-actions, .countdown-grid { grid-template-columns: 1fr 1fr; }
+      .menu-item, .random-action { grid-template-columns: auto 1fr; }
+      .price, .random-action button { grid-column: 2; justify-self: start; }
     }
   </style>
 </head>
@@ -525,49 +397,39 @@
         <div class="card gate-card">
           <div class="eyebrow">Private access</div>
           <h1 class="title">BIENVENUE</h1>
-          <p class="subtitle">Quelqu'un a très envie de prendre l'avion. Pour pénétrer le site, rentrez la date de naissance de cette personne.</p>
 
           <div class="slots-shell">
             <div class="slots-grid">
-              <div class="slot-col">
-                <div class="slot-window">
-                  <div class="slot-focus"></div>
-                  <div id="track1" class="slot-track"></div>
-                </div>
+              <div class="slot-window">
+                <div class="slot-focus"></div>
+                <div id="track1" class="slot-track"></div>
               </div>
-
-              <div class="slot-col">
-                <div class="slot-window">
-                  <div class="slot-focus"></div>
-                  <div id="track2" class="slot-track"></div>
-                </div>
+              <div class="slot-window">
+                <div class="slot-focus"></div>
+                <div id="track2" class="slot-track"></div>
               </div>
-
-              <div class="slot-col">
-                <div class="slot-window">
-                  <div class="slot-focus"></div>
-                  <div id="track3" class="slot-track"></div>
-                </div>
-              </div>
-
-              <div class="slot-col">
-                <div class="slot-window">
-                  <div class="slot-focus"></div>
-                  <div id="track4" class="slot-track"></div>
-                </div>
-                <div class="manual-row">
-                  <button id="chanceButton" class="secondary" type="button">Chance</button>
-                </div>
+              <div class="slot-window">
+                <div class="slot-focus"></div>
+                <div id="track3" class="slot-track"></div>
               </div>
             </div>
           </div>
 
-          <div class="gate-field">
-            <input id="passwordInput" type="text" placeholder="Ex : 16/05/1988" />
-            <button id="checkButton" class="primary" type="button">Je tente ma chance</button>
+          <div class="security-block">
+            <div class="security-label">🔒 Sécurité 1</div>
+            <p class="security-text">Quelqu'un a envie de prendre l'avion. Rentre sa date de naissance pour entrer.</p>
+            <input id="passwordInput" type="text" placeholder="Ex : 20/02/1989" />
           </div>
 
-          <div id="gateStatus" class="status">Entre la bonne date. Puis laisse 5 secondes à la magie.</div>
+          <div class="security-block">
+            <div class="security-label">🎵 Sécurité 2</div>
+            <p class="security-text">Que hora son ?</p>
+            <input id="security2Input" type="text" placeholder="Votre réponse" />
+            <div class="hint-inline">Indice : musique</div>
+          </div>
+
+          <button id="checkButton" class="primary" type="button">Entrer</button>
+          <div id="gateStatus" class="status"></div>
         </div>
       </div>
     </section>
@@ -579,74 +441,78 @@
       </div>
 
       <div class="menu-layout">
-        <div>
-          <div class="card section-card">
-            <div class="section-head">
-              <h2>Bienvenue au comptoir Betchi ✈️</h2>
-              <p>Tu disposes de <strong>20 BETcoin</strong> disponibles à la carte :</p>
+        <div class="card section-card">
+          <div class="section-head">
+            <h2>Bienvenue au comptoir Betchi ✈️</h2>
+            <p>Tu disposes de <strong>20 BETcoin</strong> disponibles à la carte :</p>
+          </div>
+
+          <div class="menu-list">
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check random-check" data-price="0" data-name="Rire un coup" />
+              <span class="menu-label"><span id="spinResultText">Rire</span> un coup</span>
+              <span id="spinResultPrice" class="price">0 BC</span>
+            </label>
+
+            <div class="menu-item random-action">
+              <span class="menu-label">Laisse le hasard décider</span>
+              <button id="spinWordButton" class="secondary" type="button">Je tente ma chance</button>
             </div>
 
-            <div class="menu-list">
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-price="2" data-name="Parler un coup" />
-                <span class="menu-label"><span id="spinResultText">...</span> un coup</span>
-                <span id="spinResultPrice" class="price">—</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Le meilleur porc au caramel" data-price="6" />
+              <span class="menu-label">Le meilleur porc au caramel</span>
+              <span class="price">6 BC</span>
+            </label>
 
-              <div class="menu-item" style="grid-template-columns: 1fr auto;">
-                <span class="menu-label">Laisser faire le hasard</span>
-                <button id="spinWordButton" class="secondary" type="button">Je tente ma chance</button>
-              </div>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Prendre un cours de Créole autour d'un verre" data-price="4" />
+              <span class="menu-label">Prendre un cours de Créole autour d'un verre</span>
+              <span class="price">4 BC</span>
+            </label>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Découvrez le meilleur porc au caramel de toute la galaxie" data-price="6" />
-                <span class="menu-label">Découvrez le meilleur porc au caramel de toute la galaxie</span>
-                <span class="price">6 BC</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Prendre le créol" data-price="-19" />
+              <span class="menu-label">Prendre le créol</span>
+              <span class="price">-19 BC</span>
+            </label>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Prendre un cours de Créole autour d'un verre" data-price="4" />
-                <span class="menu-label">Prendre un cours de Créole autour d'un verre</span>
-                <span class="price">4 BC</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Forfait Manapany : Samoussa, ti-punch, petit plat, initiation au zouk et dessert des iles" data-price="8" />
+              <span class="menu-label">Forfait Manapany : Samoussa, ti-punch, petit plat, initiation au zouk et dessert des iles</span>
+              <span class="price">8 BC</span>
+            </label>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Forfait Manapany : Samoussa, ti-punch, petit plat, initiation au zouk et dessert des iles" data-price="8" />
-                <span class="menu-label">Forfait Manapany : Samoussa, ti-punch, petit plat, initiation au zouk et dessert des iles</span>
-                <span class="price">8 BC</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Demander un Coach sportif" data-price="4" />
+              <span class="menu-label">Demander un Coach sportif</span>
+              <span class="price">4 BC</span>
+            </label>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Demander un Coach sportif" data-price="4" />
-                <span class="menu-label">Demander un Coach sportif</span>
-                <span class="price">4 BC</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Formule petit déjeuner" data-price="6" />
+              <span class="menu-label">Formule petit déjeuner</span>
+              <span class="price">6 BC</span>
+            </label>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Formule petit déjeuner" data-price="6" />
-                <span class="menu-label">Formule petit déjeuner</span>
-                <span class="price">6 BC</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Partir" data-price="14" />
+              <span class="menu-label">Partir</span>
+              <span class="price">14 BC</span>
+            </label>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Partir" data-price="14" />
-                <span class="menu-label">Partir</span>
-                <span class="price">14 BC</span>
-              </label>
+            <label class="menu-item">
+              <input type="checkbox" class="menu-check" data-name="Le meilleur massage du monde" data-price="10" />
+              <span class="menu-label">Le meilleur massage du monde</span>
+              <span class="price">10 BC</span>
+            </label>
+          </div>
 
-              <label class="menu-item">
-                <input type="checkbox" class="menu-check" data-name="Le meilleur massage du monde" data-price="10" />
-                <span class="menu-label">Le meilleur massage du monde</span>
-                <span class="price">10 BC</span>
-              </label>
-            </div>
-
-            <div class="special-request">
-              <p class="special-title">Une demande particulière ?</p>
-              <p class="special-text">Vous êtes beaucoup trop sex pour qu'on vous dise non...</p>
-              <textarea placeholder="Votre demande..."></textarea>
-              <button class="secondary" type="button">Faire la demande</button>
-            </div>
+          <div class="special-request">
+            <p class="special-title">Une demande particulière ?</p>
+            <p class="special-text">Vous êtes beaucoup trop sex pour qu'on vous dise non...</p>
+            <textarea placeholder="Votre demande..."></textarea>
+            <button class="secondary" type="button">Faire la demande</button>
           </div>
         </div>
 
@@ -669,11 +535,11 @@
             <div id="cartWarning" class="danger-note"></div>
           </div>
 
-          <div class="card pilot-card">
+          <div class="card pilot-card" style="margin-top:16px; padding:18px;">
             <h3>Contacter ou envoyer un nude au pilote</h3>
-            <p>Communication directe avec le cockpit.</p>
+            <p>🔥 C'est lui qui pilote</p>
             <div style="margin-top:14px;">
-              <a class="button-link primary" href="https://www.instagram.com/julien_brrt/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a class="button-link primary" href="https://www.instagram.com/julien_brrt/" target="_blank" rel="noopener noreferrer">Contacter</a>
             </div>
           </div>
         </div>
@@ -683,9 +549,9 @@
 
   <script>
     const correctPassword = "16/05/1988";
+    const correctSecurity2 = "mi corazon";
     const unlockDate = new Date("2026-06-30T00:00:00");
-    const itemHeight = 118;
-    const repeats = 9;
+    const itemHeight = 102;
     const slot1Items = [
       { icon: "☀️", label: "Soleil" },
       { icon: "🌧️", label: "Pluie" },
@@ -706,27 +572,22 @@
       { icon: "🍍", label: "Ananas" },
       { icon: "🍓", label: "Fraise" }
     ];
-    const slot4Items = [
-      { icon: "🍷", label: "Vin" },
-      { icon: "🥾", label: "Rando" },
-      { icon: "🏖️", label: "Plage" },
-      { icon: "🎵", label: "Musique" }
-    ];
     const slotTargets = ["☀️", "✈️", "🍈"];
     const bonusWords = [
       { word: "Parler", price: 2 },
       { word: "Danser", price: 4 },
       { word: "Boire", price: 2 },
       { word: "Péter", price: 8 },
-      { word: "Tirer", price: -20 }
+      { word: "Tirer", price: -20 },
+      { word: "Rire", price: 0 }
     ];
     const budget = 20;
 
     const gateScreen = document.getElementById("gateScreen");
     const menuScreen = document.getElementById("menuScreen");
     const passwordInput = document.getElementById("passwordInput");
+    const security2Input = document.getElementById("security2Input");
     const checkButton = document.getElementById("checkButton");
-    const chanceButton = document.getElementById("chanceButton");
     const gateStatus = document.getElementById("gateStatus");
     const countdownEl = document.getElementById("countdown");
     const spinWordButton = document.getElementById("spinWordButton");
@@ -737,22 +598,18 @@
     const summaryListEl = document.getElementById("summaryList");
     const cartWarning = document.getElementById("cartWarning");
     const orderButton = document.getElementById("orderButton");
-
     const tracks = [
       document.getElementById("track1"),
       document.getElementById("track2"),
-      document.getElementById("track3"),
-      document.getElementById("track4")
+      document.getElementById("track3")
     ];
     const menuChecks = Array.from(document.querySelectorAll(".menu-check"));
+    const randomCheck = document.querySelector(".random-check");
 
-    let slot4Loop = null;
-    let slot4CurrentIndex = 0;
-    let slot4Stopped = false;
-    let currentBonus = null;
+    let gateLoops = [];
 
     function normalize(value) {
-      return value.trim().replace(/\s+/g, "");
+      return value.trim().toLowerCase().replace(/\s+/g, " ");
     }
 
     function renderSlotItem(item) {
@@ -764,79 +621,69 @@
       `;
     }
 
-    function buildTrack(trackEl, items, finalIcon = null) {
+    function initLoopingTrack(trackEl, items, speed) {
       const sequence = [];
-      for (let i = 0; i < repeats; i += 1) {
-        sequence.push(items[Math.floor(Math.random() * items.length)]);
-      }
-      if (finalIcon) {
-        const target = items.find(item => item.icon === finalIcon) || items[0];
-        sequence.push(target);
-      }
+      for (let i = 0; i < 20; i += 1) sequence.push(...items);
       trackEl.innerHTML = sequence.map(renderSlotItem).join("");
-      trackEl.dataset.finalIndex = String(sequence.length - 1);
+      let index = 0;
       trackEl.style.transition = "none";
       trackEl.style.transform = "translateY(0px)";
-      void trackEl.offsetWidth;
+      const loop = setInterval(() => {
+        index += 1;
+        trackEl.style.transition = `transform ${speed}ms linear`;
+        trackEl.style.transform = `translateY(-${index * itemHeight}px)`;
+        if (index >= items.length * 10) {
+          setTimeout(() => {
+            trackEl.style.transition = "none";
+            index = 0;
+            trackEl.style.transform = "translateY(0px)";
+          }, speed + 20);
+        }
+      }, speed + 40);
+      gateLoops.push(loop);
     }
 
-    function prepareGate() {
-      buildTrack(tracks[0], slot1Items, slotTargets[0]);
-      buildTrack(tracks[1], slot2Items, slotTargets[1]);
-      buildTrack(tracks[2], slot3Items, slotTargets[2]);
-
-      const longSequence = [];
-      for (let i = 0; i < 20; i += 1) longSequence.push(...slot4Items);
-      tracks[3].innerHTML = longSequence.map(renderSlotItem).join("");
-      tracks[3].style.transition = "none";
-      tracks[3].style.transform = "translateY(0px)";
-      startSlot4Loop();
+    function stopGateLoops() {
+      gateLoops.forEach(loop => clearInterval(loop));
+      gateLoops = [];
     }
 
-    function startSlot4Loop() {
-      stopSlot4Loop();
-      slot4Stopped = false;
-      slot4Loop = setInterval(() => {
-        slot4CurrentIndex = (slot4CurrentIndex + 1) % slot4Items.length;
-        tracks[3].style.transition = "transform 500ms linear";
-        tracks[3].style.transform = `translateY(-${slot4CurrentIndex * itemHeight}px)`;
-      }, 1200);
-    }
-
-    function stopSlot4Loop() {
-      if (slot4Loop) clearInterval(slot4Loop);
-      slot4Loop = null;
-    }
-
-    function manualStopSlot4() {
-      if (slot4Stopped) return;
-      slot4Stopped = true;
-      stopSlot4Loop();
-      chanceButton.disabled = true;
-      chanceButton.textContent = "Fixé";
-    }
-
-    function spinFixedSlots() {
-      tracks.slice(0, 3).forEach((track, index) => {
-        const finalIndex = Number(track.dataset.finalIndex);
-        setTimeout(() => {
-          track.style.transition = `transform ${1500 + index * 250}ms cubic-bezier(.16,.78,.16,1)`;
-          track.style.transform = `translateY(-${finalIndex * itemHeight}px)`;
-        }, index * 180);
+    function lockTrackToTarget(trackEl, items, targetIcon, duration) {
+      const sequence = [];
+      for (let i = 0; i < 10; i += 1) sequence.push(...items);
+      const target = items.find(item => item.icon === targetIcon) || items[0];
+      sequence.push(target);
+      trackEl.innerHTML = sequence.map(renderSlotItem).join("");
+      const finalIndex = sequence.length - 1;
+      trackEl.style.transition = `transform ${duration}ms cubic-bezier(.16,.78,.16,1)`;
+      requestAnimationFrame(() => {
+        trackEl.style.transform = `translateY(-${finalIndex * itemHeight}px)`;
       });
     }
 
+    function prepareGate() {
+      stopGateLoops();
+      initLoopingTrack(tracks[0], slot1Items, 520);
+      initLoopingTrack(tracks[1], slot2Items, 620);
+      initLoopingTrack(tracks[2], slot3Items, 700);
+    }
+
     function checkPassword() {
-      if (normalize(passwordInput.value) !== normalize(correctPassword)) {
-        gateStatus.textContent = "Ce n'est pas la bonne date.";
+      const ok1 = normalize(passwordInput.value) === normalize(correctPassword);
+      const ok2 = normalize(security2Input.value) === normalize(correctSecurity2);
+
+      if (!ok1 || !ok2) {
+        gateStatus.textContent = "Une des deux sécurités n'est pas correcte.";
         gateStatus.className = "status error";
         return;
       }
 
-      gateStatus.textContent = "Bonne date. Laisse 5 secondes à la magie.";
-      gateStatus.className = "status ok";
+      gateStatus.textContent = "";
       checkButton.disabled = true;
-      spinFixedSlots();
+      stopGateLoops();
+      lockTrackToTarget(tracks[0], slot1Items, slotTargets[0], 1300);
+      lockTrackToTarget(tracks[1], slot2Items, slotTargets[1], 1700);
+      lockTrackToTarget(tracks[2], slot3Items, slotTargets[2], 2100);
 
       setTimeout(() => {
         gateScreen.classList.remove("active");
@@ -853,61 +700,39 @@
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
-
-      const boxes = [
-        [days, "Jours"],
-        [hours, "Heures"],
-        [minutes, "Minutes"],
-        [seconds, "Secondes"]
-      ];
-
+      const boxes = [[days, "Jours"], [hours, "Heures"], [minutes, "Minutes"], [seconds, "Secondes"]];
       countdownEl.innerHTML = boxes.map(([value, label]) => `
-        <div class="time-box">
-          <strong>${String(value).padStart(2, "0")}</strong>
-          <span>${label}</span>
-        </div>
+        <div class="time-box"><strong>${String(value).padStart(2, "0")}</strong><span>${label}</span></div>
       `).join("");
     }
 
     function spinMenuWord() {
       const result = bonusWords[Math.floor(Math.random() * bonusWords.length)];
-      currentBonus = {
-        name: `${result.word} un coup`,
-        price: result.price
-      };
       spinResultText.textContent = result.word;
       spinResultPrice.textContent = `${result.price} BC`;
-      menuChecks[0].dataset.name = currentBonus.name;
-      menuChecks[0].dataset.price = String(currentBonus.price);
+      randomCheck.dataset.name = `${result.word} un coup`;
+      randomCheck.dataset.price = String(result.price);
       updateCart();
     }
 
     function getSelectedItems() {
-      return menuChecks
-        .filter(check => check.checked)
-        .map(check => ({
-          name: check.dataset.name,
-          price: Number(check.dataset.price)
-        }));
+      return menuChecks.filter(check => check.checked).map(check => ({
+        name: check.dataset.name,
+        price: Number(check.dataset.price)
+      }));
     }
 
     function updateCart() {
       const items = getSelectedItems();
       const total = items.reduce((sum, item) => sum + item.price, 0);
       const remaining = budget - total;
-
       cartTotalEl.textContent = `${total} BC`;
       cartRemainingEl.textContent = remaining >= 0 ? `Il vous reste ${remaining} BC.` : `Dépassement de ${Math.abs(remaining)} BC.`;
 
       if (!items.length) {
         summaryListEl.innerHTML = `<div class="summary-row"><span>Aucune sélection pour le moment</span><span>0 BC</span></div>`;
       } else {
-        summaryListEl.innerHTML = items.map(item => `
-          <div class="summary-row">
-            <span>${item.name}</span>
-            <strong>${item.price} BC</strong>
-          </div>
-        `).join("");
+        summaryListEl.innerHTML = items.map(item => `<div class="summary-row"><span>${item.name}</span><strong>${item.price} BC</strong></div>`).join("");
       }
 
       cartWarning.textContent = remaining < 0 ? "Le panier dépasse le budget disponible." : "";
@@ -928,10 +753,8 @@
     }
 
     checkButton.addEventListener("click", checkPassword);
-    passwordInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") checkPassword();
-    });
-    chanceButton.addEventListener("click", manualStopSlot4);
+    passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
+    security2Input.addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
     spinWordButton.addEventListener("click", spinMenuWord);
     menuChecks.forEach(check => check.addEventListener("change", updateCart));
     orderButton.addEventListener("click", placeOrder);

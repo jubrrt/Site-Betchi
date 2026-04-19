@@ -18,231 +18,24 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--primary-text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            line-height: 1.5;
         }
 
         main {
             width: 95%;
             max-width: 500px;
             background: var(--card-bg);
-            padding: 2.5rem 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            padding: 3rem 1.5rem;
+            border-radius: 24px;
             border: 1px solid var(--border-color);
             text-align: center;
         }
 
-        section { display: none; animation: slideUp 0.4s ease-out; }
+        section { display: none; animation: fadeIn 0.4s ease; }
         section.active { display: block; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- TYPOGRAPHIE --- */
-        .brand { 
-            font-size: 0.7rem; 
-            letter-spacing: 2px; 
-            color: var(--secondary-text);
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .main-title { 
-            font-size: 2.2rem; 
-            font-weight: 800; 
-            line-height: 1.1;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle { 
-            font-size: 0.9rem; 
-            color: var(--accent-color); 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            margin-bottom: 2rem;
-        }
-
-        .instruction {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-text);
-        }
-
-        /* --- FORMULAIRE --- */
-        .field-group { text-align: left; margin-bottom: 1.5rem; }
-        
-        label { 
-            display: block; 
-            margin-bottom: 0.5rem; 
-            font-size: 0.95rem; 
-            color: var(--secondary-text);
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            background: #0f172a;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-
-        input::placeholder { color: #475569; }
-        input:focus { outline: none; border-color: var(--accent-color); }
-
-        button {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--accent-color);
-            color: #0f172a;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1rem;
-            text-transform: uppercase;
-            margin-top: 1rem;
-        }
-
-        /* --- GRILLE DE NAVIGATION (LES 4 CASES) --- */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 2rem;
-        }
-
-        .nav-card {
-            background: #0f172a;
-            padding: 25px 10px;
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .nav-card:hover { border-color: var(--accent-color); transform: scale(1.02); }
-        
-        .icon-box { font-size: 2rem; margin-bottom: 10px; }
-        .label-box { font-size: 0.8rem; color: var(--secondary-text); text-transform: uppercase; }
-
-        .error { color: var(--error-color); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
-        .back-link { margin-top: 2rem; color: var(--secondary-text); cursor: pointer; display: inline-block; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-
-<main>
-    <section id="login" class="active">
-        <div class="brand">Betchi.fr</div>
-        <h1 class="main-title">TERMINAL DE LIAISON 🛫</h1>
-        <p class="subtitle">Privé & sécurisé</p>
-        
-        <div style="height: 1px; background: var(--border-color); margin-bottom: 2rem;"></div>
-        
-        <p class="instruction">Vérifier mon accréditation</p>
-
-        <div class="field-group">
-            <label>1. Une personne a très envie de prendre l'avion. Quelle est sa date de naissance ?</label>
-            <input type="text" id="q1" placeholder="ex : 20/02/1989">
-        </div>
-
-        <div class="field-group">
-            <label>2. Que hora son ? 🎵</label>
-            <input type="text" id="q2" placeholder="ex : Me gustas tú">
-        </div>
-
-        <p id="errorMsg" class="error">Accréditation refusée. Vérifiez vos réponses.</p>
-        <button onclick="validate()">Pénétrer l'espace aérien</button>
-    </section>
-
-    <section id="home">
-        <div class="brand">Betchi.fr</div>
-        <h1 class="main-title">TABLEAU DE BORD</h1>
-        <p class="subtitle">Accès autorisé</p>
-
-        <div class="nav-grid">
-            <div class="nav-card" onclick="showPage('p1')">
-                <div class="icon-box">📂</div>
-                <div class="label-box">Archives</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p2')">
-                <div class="icon-box">🗺️</div>
-                <div class="label-box">Destinations</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p3')">
-                <div class="icon-box">🔒</div>
-                <div class="label-box">Codes</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p4')">
-                <div class="icon-box">💌</div>
-                <div class="label-box">Messages</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="p1">
-        <h1>Archives</h1>
-        <p style="margin: 2rem 0;">[Contenu de la case 1 ici]</p>
-        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
-    </section>
-
-    <section id="p2">
-        <h1>Destinations</h1>
-        <p style="margin: 2rem 0;">[Contenu de la case 2 ici]</p>
-        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
-    </section>
-
-    <section id="p3">
-        <h1>Codes</h1>
-        <p style="margin: 2rem 0;">[Contenu de la case 3 ici]</p>
-        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
-    </section>
-
-    <section id="p4">
-        <h1>Messages</h1>
-        <p style="margin: 2rem 0;">[Contenu de la case 4 ici]</p>
-        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
-    </section>
-</main>
-
-<script>
-    /* --- CONFIGURATION DES RÉPONSES --- */
-    const AUTH = {
-        answer1: "20/02/1989", // Modifiez la date ici
-        answer2: "Me gustas tú" // Modifiez la réponse ici
-    };
-
-    function validate() {
-        const r1 = document.getElementById('q1').value.trim();
-        const r2 = document.getElementById('q2').value.trim();
-        const error = document.getElementById('errorMsg');
-
-        // Validation simple (insensible à la casse pour la question 2)
-        if (r1 === AUTH.answer1 && r2.toLowerCase() === AUTH.answer2.toLowerCase()) {
-            showPage('home');
-        } else {
-            error.style.display = 'block';
-        }
-    }
-
-    function showPage(id) {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
-</script>
-
-</body>
-</html>

@@ -2,123 +2,73 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betchi.fr - Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BETCHI.FR | Terminal de Liaison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0b0f1a;
-            --card: #161e2d;
-            --blue: #38bdf8;
-            --text: #ffffff;
-            --dim: #94a3b8;
-        }
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, system-ui, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        :root { --betchi-dark: #070a16; --betchi-blue: #0088ff; }
+        body { 
+            background: var(--betchi-dark); 
+            color: #bdc5d1; 
+            font-family: 'Inter', sans-serif; 
             margin: 0;
-            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: screen;
+            overflow: hidden;
         }
-        main {
-            width: 100%;
-            max-width: 420px;
-            background: var(--card);
-            padding: 40px 25px;
-            border-radius: 24px;
-            text-align: center;
-            border: 1px solid #2d3748;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        
+        .betchi-title { 
+            font-size: 5rem; 
+            font-weight: 900; 
+            color: var(--betchi-blue); 
+            letter-spacing: -0.05em;
+            line-height: 1;
         }
-        section { display: none; }
-        section.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .brand { font-size: 10px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; display: block; margin-bottom: 25px; }
-        .departure-icon { font-size: 50px; margin-bottom: 10px; display: block; }
-        h1 { font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
-        .subtitle { font-size: 11px; color: var(--blue); letter-spacing: 2px; margin-bottom: 35px; text-transform: uppercase; }
-
-        .field { text-align: left; margin-bottom: 20px; }
-        label { font-size: 13px; color: var(--dim); display: block; margin-bottom: 8px; line-height: 1.4; }
-        input { width: 100%; padding: 14px; background: #0b0f1a; border: 1px solid #2d3748; color: white; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
-        button { width: 100%; padding: 16px; background: var(--blue); color: #0b0f1a; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-size: 14px; }
         
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .card { background: #0b0f1a; padding: 25px 10px; border-radius: 18px; border: 1px solid #2d3748; cursor: pointer; transition: 0.2s; }
-        .card:active { transform: scale(0.95); }
-        .card-icon { font-size: 32px; display: block; margin-bottom: 8px; }
-        .card-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+        @media (max-width: 640px) { .betchi-title { font-size: 3.5rem; } }
+
+        .airport-typo { font-family: 'Roboto Mono', monospace; text-transform: uppercase; }
+
+        /* VOLETS (SPLIT-FLAP) */
+        .flap-board { display: flex; gap: 10px; justify-content: center; margin: 40px 0; }
+        .flap {
+            width: 65px; height: 90px; background: #1a1e2e; border-radius: 8px;
+            color: white; font-size: 2.5rem;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; border-bottom: 3px solid #000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .flap::after { 
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; 
+            background: rgba(0,0,0,0.8); z-index: 2; 
+        }
+
+        .spinning { animation: flip 0.15s infinite; }
+        @keyframes flip { 
+            0% { transform: rotateX(0deg); background: #1a1e2e; } 
+            50% { transform: rotateX(-90deg); background: #070a16; }
+            100% { transform: rotateX(0deg); background: #1a1e2e; } 
+        }
+
+        .hidden { display: none; }
         
-        .err { color: #f87171; font-size: 13px; margin-top: 15px; display: none; }
-        .back { margin-top: 30px; display: inline-block; color: var(--dim); text-decoration: underline; cursor: pointer; font-size: 13px; }
+        input { transition: all 0.3s ease; }
+        input:focus { ring: 2px solid var(--betchi-blue); }
     </style>
 </head>
-<body>
+<body class="p-6">
 
-<main>
-    <section id="login" class="active">
-        <span class="brand">Betchi.fr</span>
-        <span class="departure-icon">🛫</span>
-        <h1>Terminal de liaison</h1>
-        <p class="subtitle">Privé & sécurisé</p>
+    <div id="login-screen" class="w-full max-w-xl text-center space-y-12">
         
-        <div class="field">
-            <label>1. Une personne a très envie de prendre l'avion. Quelle est sa date de naissance ?</label>
-            <input type="text" id="q1" placeholder="ex : 20/02/1989">
+        <div class="space-y-2">
+            <p class="airport-typo text-xs tracking-[0.5em] text-slate-500 font-bold">Terminal de Liaison</p>
+            <h1 class="betchi-title">BETCHI.FR</h1>
+            <p class="text-lg text-slate-400 font-medium italic">Espace Aérien Privé & Sécurisé</p>
         </div>
-        <div class="field">
-            <label>2. Que hora son ? 🎵</label>
-            <input type="text" id="q2" placeholder="ex : Me gustas tú">
-        </div>
-        <p id="errorMsg" class="err">Accréditation refusée.</p>
-        <button onclick="check()">Pénétrer l'espace aérien</button>
-    </section>
 
-    <section id="home">
-        <span class="brand">Betchi.fr</span>
-        <h1>Tableau de Bord</h1>
-        <p class="subtitle">Accès Autorisé</p>
-        <div class="grid">
-            <div class="card" onclick="go('p1')"><span class="card-icon">✈️</span><span class="card-label">Avion</span></div>
-            <div class="card" onclick="go('p2')"><span class="card-icon">☀️</span><span class="card-label">Soleil</span></div>
-            <div class="card" onclick="go('p3')"><span class="card-icon">💣</span><span class="card-label">Bombe</span></div>
-            <div class="card" onclick="go('p4')"><span class="card-icon">❤️</span><span class="card-label">Coeur</span></div>
-            <div class="card" onclick="go('p5')"><span class="card-icon">🍷</span><span class="card-label">Vin</span></div>
-            <div class="card" onclick="go('p6')"><span class="card-icon">🌮</span><span class="card-label">Tacos</span></div>
-        </div>
-    </section>
-
-    <section id="p1"><h1>Espace Avion</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
-    <section id="p2"><h1>Espace Soleil</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
-    <section id="p3"><h1>Espace Bombe</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
-    <section id="p4"><h1>Espace Coeur</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
-    <section id="p5"><h1>Espace Vin</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
-    <section id="p6"><h1>Espace Tacos</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
-</main>
-
-<script>
-    function check() {
-        const r1 = document.getElementById('q1').value.trim();
-        const r2 = document.getElementById('q2').value.trim().toLowerCase();
-        
-        // Réponses exactes
-        if (r1 === "16/05/1988" && r2 === "mi corazon") {
-            go('home');
-        } else {
-            document.getElementById('errorMsg').style.display = 'block';
-        }
-    }
-
-    function go(id) {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
-</script>
-
-</body>
-</html>
+        <div class="max-w-sm mx-auto space-y-4">
+            <input type="date" id="pass-bday" class="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-5 text-white outline-none">
+            <input type="text" id="pass-joke" placeholder="¿Que hora son?" class="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-5 text-white outline-none">

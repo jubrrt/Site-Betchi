@@ -2,101 +2,203 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BETCHI.FR | Terminal de Liaison</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Privé</title>
     <style>
-        :root { --betchi-dark: #070a16; --betchi-blue: #0088ff; }
-        body { 
-            background: var(--betchi-dark); 
-            color: #bdc5d1; 
-            font-family: 'Inter', sans-serif; 
-            overflow: hidden; 
-            margin: 0;
-            -webkit-tap-highlight-color: transparent;
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --primary-color: #2d3436;
+            --accent-color: #6c5ce7;
+            --text-color: #2d3436;
+            --error-color: #ff7675;
+            --transition: all 0.3s ease;
         }
-        .airport-typo { font-family: 'Roboto Mono', monospace; text-transform: uppercase; }
-        .betchi-title { font-size: 5rem; font-weight: 900; color: var(--betchi-blue); tracking-tight; }
-        @media (max-width: 640px) { .betchi-title { font-size: 3rem; } }
 
-        /* Animation des volets de sécurité (Split-flap style) */
-        .flap-board { display: flex; gap: 8px; justify-content: center; margin: 30px 0; }
-        .flap {
-            width: 60px; height: 85px; background: #222; border-radius: 6px;
-            color: white; font-size: 2.8rem; font-weight: 800;
-            display: flex; align-items: center; justify-content: center;
-            position: relative; border-bottom: 2px solid #000;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .flap::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(0,0,0,0.5); }
-        .spining { animation: flip 0.2s infinite; }
-        @keyframes flip { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(-180deg); } }
 
-        /* Transition entre écrans */
-        .page-transition { transition: all 0.5s ease-in-out; }
-        .hidden { display: none; }
+        /* --- LAYOUT --- */
+        main {
+            width: 90%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            min-height: 400px;
+        }
+
+        section { display: none; animation: fadeIn 0.5s ease forwards; }
+        section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ELEMENTS --- */
+        h1 { margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center; }
+        p { margin-bottom: 1rem; color: #636e72; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        button:hover { opacity: 0.9; }
+
+        nav {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: #f1f2f6;
+            color: var(--text-color);
+        }
+
+        .error-msg {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .back-home {
+            margin-top: 1.5rem;
+            background: none;
+            color: var(--accent-color);
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center justify-center min-h-screen text-center space-y-16">
+<body>
 
-    <div id="sky-animation" class="fixed top-0 left-0 w-full h-full -z-10 hidden opacity-60">
-        </div>
+<main>
+    <section id="login" class="active">
+        <h1>Accès Réservé</h1>
+        <p>Veuillez répondre pour entrer.</p>
+        
+        <input type="password" id="passwordInput" placeholder="Mot de passe">
+        <p id="errorPass" class="error-msg">Mot de passe incorrect.</p>
 
-    <div id="login-block" class="space-y-10 page-transition">
-        <div class="space-y-2">
-            <p class="airport-typo text-xs tracking-[0.4em] font-normal text-slate-400">Terminal de Liaison</p>
-            <h1 class="betchi-title">BETCHI.FR</h1>
-            <p class="naif text-sm sm:text-lg font-bold text-slate-500 italic">Espace Aérien Privé & Sécurisé</p>
-        </div>
+        <p><strong>Énigme :</strong> <span id="riddleText"></span></p>
+        <input type="text" id="riddleInput" placeholder="Votre réponse">
+        <p id="errorRiddle" class="error-msg">Réponse à l'énigme incorrecte.</p>
 
-        <div class="max-w-md mx-auto space-y-6">
-            <div class="space-y-4">
-                <input type="date" id="pass-birthday" placeholder="Date de naissance" class="w-full bg-slate-800 border-none rounded-2xl p-5 text-white shadow-sm outline-none ring-1 ring-slate-700 focus:ring-2 focus:ring-sky-500">
-                <input type="text" id="pass-joke" placeholder="Votre private joke (Demander à Manu Chao)" class="w-full bg-slate-800 border-none rounded-2xl p-5 text-white shadow-sm outline-none ring-1 ring-slate-700 focus:ring-2 focus:ring-sky-500">
-            </div>
+        <button onclick="checkAuth()">Entrer</button>
+    </section>
 
-            <div class="flap-board">
-                <div class="flap" id="f1">?</div>
-                <div class="flap" id="f2">?</div>
-                <div class="flap" id="f3">?</div>
-                <div class="flap" id="f4">?</div>
-            </div>
+    <section id="home">
+        <h1>Bienvenue</h1>
+        <p>Heureux de vous revoir. Voici vos rubriques privées :</p>
+        <nav>
+            <button onclick="showPage('page1')">Contenu Un</button>
+            <button onclick="showPage('page2')">Contenu Deux</button>
+            <button onclick="showPage('page3')">Contenu Trois</button>
+        </nav>
+    </section>
 
-            <button onclick="attemptLogin()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl active:scale-95 transition-all text-sm tracking-widest uppercase shadow-lg">Embarquement immédiat</button>
-        </div>
-    </div>
+    <section id="page1">
+        <h1>Contenu Un</h1>
+        <p>Ceci est votre premier espace privé. Modifiez ce texte dans le HTML selon vos besoins.</p>
+        <button class="back-home" onclick="showPage('home')">← Retour</button>
+    </section>
 
-    <div id="home-block" class="hidden w-full max-w-md page-transition space-y-10">
-        </div>
+    <section id="page2">
+        <h1>Contenu Deux</h1>
+        <p>Ceci est votre deuxième espace privé. Ajoutez des images ou des listes ici.</p>
+        <button class="back-home" onclick="showPage('home')">← Retour</button>
+    </section>
 
-    <script>
-        function attemptLogin() {
-            const bday = document.getElementById('pass-birthday').value;
-            const joke = document.getElementById('pass-joke').value.toLowerCase();
-            
-            if(bday.includes("16/05") && (joke.includes("mi corazon") || joke.includes("corazon"))) {
-                // Succès : Animation des flaps
-                const res = ['O', 'K', 'A', 'Y'];
-                [1,2,3,4].forEach((id, i) => {
-                    const flap = document.getElementById(`f${id}`);
-                    flap.classList.add('spining');
-                    setTimeout(() => {
-                        flap.classList.remove('spining');
-                        flap.innerText = res[i];
-                        flap.style.color = '#10b981';
-                    }, i * 400 + 1000);
-                });
-                
-                // Bascule d'écrans après l'animation
-                setTimeout(() => {
-                    document.getElementById('login-block').classList.add('hidden');
-                    document.getElementById('home-block').classList.remove('hidden');
-                    document.getElementById('sky-animation').classList.remove('hidden');
-                }, 3500);
-            } else {
-                alert("Identité non confirmée. Vérifiez vos documents de bord.");
-            }
+    <section id="page3">
+        <h1>Contenu Trois</h1>
+        <p>Ceci est votre troisième espace privé. Idéal pour des notes ou souvenirs.</p>
+        <button class="back-home" onclick="showPage('home')">← Retour</button>
+    </section>
+</main>
+
+<script>
+    /* --- CONFIGURATION (À MODIFIER) --- */
+    const CONFIG = {
+        password: "monmotdepasse",    // Le mot de passe requis
+        riddle: "Quelle est la capitale de la France ?", // L'énoncé de l'énigme
+        answer: "Paris"               // La réponse à l'énigme (insensible à la casse)
+    };
+
+    /* --- LOGIQUE --- */
+
+    // Initialisation de l'énigme
+    document.getElementById('riddleText').innerText = CONFIG.riddle;
+
+    function checkAuth() {
+        const pass = document.getElementById('passwordInput').value;
+        const answer = document.getElementById('riddleInput').value.trim().toLowerCase();
+        
+        let isValid = true;
+
+        // Reset messages
+        document.getElementById('errorPass').style.display = 'none';
+        document.getElementById('errorRiddle').style.display = 'none';
+
+        if (pass !== CONFIG.password) {
+            document.getElementById('errorPass').style.display = 'block';
+            isValid = false;
         }
-    </script>
+
+        if (answer !== CONFIG.answer.toLowerCase()) {
+            document.getElementById('errorRiddle').style.display = 'block';
+            isValid = false;
+        }
+
+        if (isValid) {
+            showPage('home');
+        }
+    }
+
+    function showPage(pageId) {
+        // Masquer toutes les sections
+        const sections = document.querySelectorAll('section');
+        sections.forEach(s => s.classList.remove('active'));
+
+        // Afficher la section demandée
+        document.getElementById(pageId).classList.add('active');
+        
+        // Scroll en haut
+        window.scrollTo(0, 0);
+    }
+</script>
+
 </body>
 </html>

@@ -1,334 +1,577 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BETCHI.FR | Terminal de Liaison</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Gaegu:wght@400;700&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --sky-bg: #eef4f8;
-            --airport-dark: #1b1f24;
-            --airport-panel: rgba(255, 255, 255, 0.82);
-            --accent: #0ea5e9;
-            --success: #10b981;
-            --danger: #ef4444;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BETCHI.FR | Terminal de Liaison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sky-bg: #071226;
+      --sky-bg-2: #0b1730;
+      --airport-dark: #0d1524;
+      --airport-panel: rgba(10, 22, 42, 0.78);
+      --airport-panel-soft: rgba(255, 255, 255, 0.06);
+      --line: rgba(106, 174, 255, 0.18);
+      --accent: #4ea3ff;
+      --accent-soft: #8bc3ff;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --text: #e5eef8;
+      --muted: #8ea6c2;
+      --slot-h: 124px;
+    }
 
-        * { box-sizing: border-box; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(78,163,255,0.08), transparent 22%),
+        radial-gradient(circle at 20% 20%, rgba(78,163,255,0.06), transparent 18%),
+        linear-gradient(180deg, var(--sky-bg), var(--sky-bg-2));
+      overflow-x: hidden;
+    }
 
-        body {
-            background-color: var(--sky-bg);
-            color: #334155;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-        }
+    .naif { font-family: 'Gaegu', cursive; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
 
-        .naif { font-family: 'Gaegu', cursive; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
+    .wallpaper {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      opacity: 0.18;
+      pointer-events: none;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%235faeff' stroke-opacity='0.22' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M42 50l16 0m-8 -8l0 16'/%3E%3Cpath d='M118 42l14-6l-6 14'/%3E%3Ccircle cx='204' cy='52' r='12'/%3E%3Cpath d='M204 32v8M204 64v8M184 52h8M216 52h8M191 39l6 6M211 59l6 6M191 65l6-6M211 45l6-6'/%3E%3Cpath d='M50 128l18-8l-8 18'/%3E%3Cpath d='M114 116c8 0 13 5 13 13c0 8-5 13-13 13c-8 0-13-5-13-13c0-8 5-13 13-13z'/%3E%3Cpath d='M177 120c6 0 11 4 11 10c0 6-5 10-11 10c-6 0-11-4-11-10c0-6 5-10 11-10z'/%3E%3Cpath d='M40 205l12-12'/%3E%3Cpath d='M40 193l12 12'/%3E%3Cpath d='M118 198l18 0'/%3E%3Cpath d='M176 204l16-7l-7 16'/%3E%3C/g%3E%3Cg fill='%235faeff' fill-opacity='0.18'%3E%3Cpath d='M78 26c1.9-3.6 6.1-3.6 8 0c1.9-3.6 6.1-3.6 8 0c0 4.4-8 8.7-8 8.7s-8-4.3-8-8.7z'/%3E%3Cpath d='M212 164c1.6-3 5.1-3 6.7 0c1.6-3 5.1-3 6.7 0c0 3.6-6.7 7.1-6.7 7.1s-6.7-3.5-6.7-7.1z'/%3E%3Cpath d='M132 236c1.6-3 5.1-3 6.7 0c1.6-3 5.1-3 6.7 0c0 3.6-6.7 7.1-6.7 7.1s-6.7-3.5-6.7-7.1z'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 280px 280px;
+    }
 
-        .wallpaper {
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-            opacity: 0.2;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            padding: 16px;
-            gap: 24px;
-            pointer-events: none;
-        }
+    .sky-svg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.55;
+    }
 
-        .icon-static {
-            font-size: clamp(1.4rem, 3vw, 2rem);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            filter: grayscale(0.15);
-        }
+    .heart-path {
+      fill: none;
+      stroke: rgba(78, 163, 255, 0.28);
+      stroke-width: 2.2;
+      stroke-dasharray: 7 10;
+      stroke-linecap: round;
+    }
 
-        .sky-svg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
+    .plane-on-path {
+      position: fixed;
+      top: 0;
+      left: 0;
+      font-size: 1.6rem;
+      offset-path: path('M 500 280 C 500 140 270 140 270 330 C 270 530 500 720 500 720 C 500 720 730 530 730 330 C 730 140 500 140 500 280');
+      animation: followPath 18s linear infinite;
+      z-index: -1;
+      opacity: 0.9;
+      pointer-events: none;
+    }
 
-        .heart-path {
-            fill: none;
-            stroke: rgba(14, 165, 233, 0.3);
-            stroke-width: 2.4;
-            stroke-dasharray: 7, 10;
-            stroke-linecap: round;
-        }
+    @keyframes followPath {
+      from { offset-distance: 0%; }
+      to { offset-distance: 100%; }
+    }
 
-        .plane-on-path {
-            offset-path: path('M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300');
-            animation: followPath 18s linear infinite;
-            font-size: 2rem;
-            position: absolute;
-            opacity: 0.95;
-        }
+    .terminal-header {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(7, 13, 24, 0.9);
+      color: var(--warning);
+      border: 1px solid rgba(245,158,11,0.2);
+      box-shadow: inset 0 0 14px rgba(245,158,11,0.1);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.74rem;
+      line-height: 1.45;
+    }
 
-        @keyframes followPath {
-            0% { offset-distance: 0%; transform: rotate(0deg); }
-            100% { offset-distance: 100%; }
-        }
+    .glass {
+      background: var(--airport-panel);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+    }
 
-        .terminal-header {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--airport-dark);
-            color: #f59e0b;
-            padding: 10px 18px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            border: 2px solid #2d343f;
-            box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.2);
-            display: inline-block;
-        }
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
 
-        .glass {
-            background: var(--airport-panel);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 2.2rem;
-        }
+    .tab-btn {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: all 150ms ease;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+    }
 
-        .status-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
+    .tab-btn.active {
+      background: #f8fafc;
+      border-color: #f8fafc;
+      color: #0f172a;
+    }
 
-        .tab-btn {
-            border: 1px solid #cbd5e1;
-            border-radius: 999px;
-            padding: 8px 14px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            transition: all 160ms ease;
-            color: #334155;
-            background: white;
-        }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-        .tab-btn.active {
-            background: #0f172a;
-            border-color: #0f172a;
-            color: white;
-        }
+    .card {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.09);
+      padding: 0.95rem;
+      background: rgba(255, 255, 255, 0.05);
+    }
 
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
+    .slot-window {
+      position: relative;
+      height: 168px;
+      overflow: hidden;
+      border-radius: 22px;
+      background: rgba(3, 11, 22, 0.56);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
 
-        .card {
-            border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            padding: 0.9rem;
-            background: rgba(255, 255, 255, 0.7);
-        }
-    </style>
+    .slot-window::before,
+    .slot-window::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 24px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .slot-window::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(7,18,38,0.96), rgba(7,18,38,0));
+    }
+
+    .slot-window::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(7,18,38,0.96), rgba(7,18,38,0));
+    }
+
+    .slot-focus {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 50%;
+      height: var(--slot-h);
+      transform: translateY(-50%);
+      border: 1.5px solid rgba(95,174,255,0.45);
+      border-radius: 18px;
+      background: rgba(95,174,255,0.05);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .slot-track {
+      transform: translateY(0px);
+      transition: transform 1700ms cubic-bezier(.16,.78,.16,1);
+    }
+
+    .slot-item {
+      height: var(--slot-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .boarding-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(95,174,255,0.5), transparent);
+    }
+
+    .note-item {
+      border-left: 2px solid rgba(95,174,255,0.5);
+      padding-left: 12px;
+    }
+
+    @media (max-width: 420px) {
+      .terminal-header { font-size: 0.66rem; }
+      .slot-window { height: 152px; }
+      :root { --slot-h: 96px; }
+      .slot-item { font-size: 1.8rem; }
+    }
+  </style>
 </head>
 <body class="p-4 flex flex-col items-center min-h-screen">
+  <div class="wallpaper" aria-hidden="true"></div>
+  <svg class="sky-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path class="heart-path" d="M 500 280 C 500 140 270 140 270 330 C 270 530 500 720 500 720 C 500 720 730 530 730 330 C 730 140 500 140 500 280" />
+  </svg>
+  <div class="plane-on-path" aria-hidden="true">🛫</div>
 
-    <div class="wallpaper" aria-hidden="true">
-        <div class="icon-static">✈️</div><div class="icon-static">🧳</div><div class="icon-static">🎧</div><div class="icon-static">🌤️</div><div class="icon-static">🛂</div>
-        <div class="icon-static">🗺️</div><div class="icon-static">🧃</div><div class="icon-static">❤️</div><div class="icon-static">🛬</div><div class="icon-static">☀️</div>
-    </div>
+  <main class="w-full max-w-md mt-6 sm:mt-8">
+    <section id="login-screen" class="space-y-5">
+      <div class="text-center">
+        <div class="terminal-header">
+          TERMINAL DE LIAISON BETCHI.FR<br>
+          Validation sécurité passagers privés
+        </div>
+      </div>
 
-    <svg class="sky-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <path class="heart-path" d="M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300" />
-    </svg>
-    <div class="plane-on-path" aria-hidden="true">🛫</div>
+      <div class="glass p-5 sm:p-6 space-y-5">
+        <p class="text-[11px] text-slate-300/80 leading-relaxed">
+          <span class="status-dot bg-emerald-500"></span>
+          Contrôle d'accès local pour 2 personnes. Aucune donnée n'est envoyée côté serveur.
+        </p>
 
-    <main class="w-full max-w-md mt-8 sm:mt-10">
-        <section id="login-screen" class="space-y-7">
-            <div class="text-center">
-                <div class="terminal-header text-[10px] sm:text-xs tracking-tight">
-                    TERMINAL DE LIAISON BETCHI.FR<br>
-                    Validation sécurité passagers privés
-                </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="slot-window"><div class="slot-focus"></div><div id="track1" class="slot-track"></div></div>
+          <div class="slot-window"><div class="slot-focus"></div><div id="track2" class="slot-track"></div></div>
+          <div class="slot-window"><div class="slot-focus"></div><div id="track3" class="slot-track"></div></div>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-2 uppercase mono tracking-wider">Sécurité 1 · Date de naissance</label>
+            <p class="text-sm text-slate-300/85 mb-2">Quelqu'un a très envie de prendre l'avion. Rentre sa date de naissance pour entrer.</p>
+            <input type="text" id="birthday" placeholder="Ex : 20/02/1989" autocomplete="off" class="w-full bg-white/10 text-white placeholder:text-slate-400 border-none rounded-2xl p-4 outline-none ring-1 ring-white/10 focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-2 uppercase mono tracking-wider">Sécurité 2 · Mot de passe musical 🎵</label>
+            <p class="text-sm text-slate-300/85 mb-2">¿Que hora son?</p>
+            <input type="text" id="joke" placeholder="Votre réponse" autocomplete="off" class="w-full bg-white/10 text-white placeholder:text-slate-400 border-none rounded-2xl p-4 outline-none ring-1 ring-white/10 focus:ring-2 focus:ring-sky-400" />
+          </div>
+        </div>
+
+        <p id="attempts-label" class="text-[11px] text-slate-400 mono">Essais restants: 5</p>
+
+        <button id="login-btn" class="w-full bg-slate-100 text-slate-900 font-black py-4 rounded-2xl shadow-xl tracking-widest text-sm uppercase active:scale-[0.99] transition-all">
+          Entrer
+        </button>
+
+        <p id="login-status" class="text-center text-sm text-slate-300 min-h-[20px]"></p>
+      </div>
+    </section>
+
+    <section id="home-screen" class="hidden space-y-4">
+      <div class="glass p-5 text-center">
+        <div class="terminal-header mb-4">TABLEAU DE BORD · TERMINAL PRIVÉ</div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white mb-2">Bienvenue au comptoir Betchi ✈️ ☀️ 🍆 ❤️</h1>
+        <p class="naif text-2xl text-sky-300 italic">Petit terminal privé, gros sourire cabine.</p>
+      </div>
+
+      <div class="glass p-4 sm:p-5 space-y-4">
+        <div class="text-center mb-1">
+          <h2 class="mono text-lg text-sky-300 tracking-[0.18em] uppercase">Ludovico</h2>
+        </div>
+        <div id="countdown" class="grid grid-cols-4 gap-2"></div>
+      </div>
+
+      <div class="glass p-4 sm:p-5 space-y-4">
+        <div class="flex flex-wrap gap-2 justify-center" role="tablist" aria-label="Navigation privée">
+          <button class="tab-btn active" data-tab="tab-vol">Vol</button>
+          <button class="tab-btn" data-tab="tab-carte">Carte</button>
+          <button class="tab-btn" data-tab="tab-tour">Tour</button>
+          <button class="tab-btn" data-tab="tab-charte">Charte</button>
+        </div>
+
+        <div id="tab-vol" class="tab-panel active space-y-3">
+          <div class="card">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono mb-2">Statut terminal</p>
+            <p class="text-sm text-slate-100">Passagers validés ✅ · Embarquement détente en cours.</p>
+          </div>
+          <div class="card">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono mb-2">Plan de vol</p>
+            <div class="space-y-3 text-sm text-slate-200">
+              <div class="flex items-center justify-between"><span>Aujourd'hui</span><span class="mono text-sky-300">Initialisation terminal</span></div>
+              <div class="boarding-line"></div>
+              <div class="flex items-center justify-between"><span>1er décembre</span><span class="mono text-sky-300">Calendrier digital</span></div>
+              <div class="boarding-line"></div>
+              <div class="flex items-center justify-between"><span>30 juin</span><span class="mono text-sky-300">Ludovico Einaudi</span></div>
             </div>
+          </div>
+          <div class="card">
+            <iframe style="border-radius:16px" src="https://open.spotify.com/embed/playlist/5mHtKXmav0kw4p2LNVrAPa" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
 
-            <div class="glass p-7 sm:p-8 space-y-6 shadow-2xl">
-                <p class="text-xs text-slate-500 leading-relaxed">
-                    <span class="status-dot bg-emerald-500"></span>
-                    Contrôle d'accès local pour 2 personnes. Aucune donnée n'est envoyée côté serveur.
-                </p>
-
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-500 mb-2 uppercase italic">Date de naissance passager #1</label>
-                        <input
-                            type="text"
-                            id="birthday"
-                            placeholder="ex : 16/05"
-                            autocomplete="off"
-                            class="w-full bg-white/70 border-none rounded-2xl p-4 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300"
-                        >
-                    </div>
-                    <div>
-                        <div class="flex items-center mb-2">
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase italic mr-2">Mot de passe musical</label>
-                            <span>🎵</span>
-                        </div>
-                        <input
-                            type="text"
-                            id="joke"
-                            placeholder="Indice : Manu Chao"
-                            autocomplete="off"
-                            class="w-full bg-white/70 border-none rounded-2xl p-4 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300"
-                        >
-                    </div>
-                </div>
-
-                <p id="attempts-label" class="text-[11px] text-slate-500 mono">Essais restants: 5</p>
-
-                <button
-                    id="login-btn"
-                    onclick="attemptLogin()"
-                    class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl shadow-xl tracking-widest text-sm uppercase active:scale-95 transition-all"
-                >
-                    Validation sécurité
-                </button>
+        <div id="tab-carte" class="tab-panel space-y-3">
+          <div class="card">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono mb-2">2002 BETcoins disponibles</p>
+            <div class="space-y-2 text-sm text-slate-100">
+              <div class="flex justify-between"><span>Le meilleur porc au caramel</span><span class="text-emerald-400 mono">+6 BC</span></div>
+              <div class="flex justify-between"><span>Prendre un cours de créole</span><span class="text-emerald-400 mono">+4 BC</span></div>
+              <div class="flex justify-between"><span>30 min de papouilles dans les cheveux</span><span class="text-emerald-400 mono">+3 BC</span></div>
+              <div class="flex justify-between"><span>Et pourquoi pas un petit appel de courtoisie tout simplement ?</span><span class="text-emerald-400 mono">+1 BC</span></div>
+              <div class="flex justify-between"><span>Partir un jouuuuuuuur (ou deux)</span><span class="text-emerald-400 mono">+14 BC</span></div>
             </div>
-        </section>
+          </div>
+          <div class="card text-sm text-slate-200 space-y-2">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono">Conditions d'exploitation</p>
+            <p>FORFAIT BIG LOVE indisponible pour raisons de maintenance technique sur le réacteur principal.</p>
+            <p>Modes de paiement : prélèvement direct BETcoins · paiement 4x en nature (sans frais).</p>
+          </div>
+        </div>
 
-        <section id="home-screen" class="hidden space-y-4">
-            <div class="glass p-7 text-center shadow-2xl">
-                <h1 class="text-3xl font-black text-slate-800 mb-2">Bienvenue à bord</h1>
-                <p class="naif text-2xl text-sky-700 italic">"Petit terminal privé, gros sourire cabine."</p>
+        <div id="tab-tour" class="tab-panel space-y-3">
+          <div class="card">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono mb-2">Échange avec la tour</p>
+            <p class="text-sm text-slate-200 mb-3">Messages discrets & asynchrones. Pas de notifications. Pas de pression. Juste nous.</p>
+            <textarea id="tower-input" placeholder="Laisser un mot dans la tour..." class="w-full bg-white/10 text-white placeholder:text-slate-400 border-none rounded-2xl p-4 outline-none ring-1 ring-white/10 focus:ring-2 focus:ring-sky-400 min-h-[110px]"></textarea>
+            <div class="flex gap-2 mt-3">
+              <button id="save-note-btn" class="primary flex-1">Déposer</button>
+              <button id="clear-notes-btn" class="secondary">Vider</button>
             </div>
+            <p class="text-[11px] text-slate-400 mt-3">Stockage local sur cet appareil uniquement.</p>
+          </div>
+          <div class="card">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono mb-3">Carnet de bord</p>
+            <div id="notes-list" class="space-y-3 text-sm text-slate-100"></div>
+          </div>
+        </div>
 
-            <div class="glass p-4 sm:p-5 shadow-2xl space-y-4">
-                <div class="flex flex-wrap gap-2 justify-center" role="tablist" aria-label="Navigation privée">
-                    <button class="tab-btn active" data-tab="tab-vol">Vol</button>
-                    <button class="tab-btn" data-tab="tab-carnet">Carnet</button>
-                    <button class="tab-btn" data-tab="tab-charte">Charte</button>
-                </div>
+        <div id="tab-charte" class="tab-panel space-y-3">
+          <div class="card">
+            <p class="text-[11px] uppercase font-bold text-slate-400 mono mb-2">Charte aéroport</p>
+            <ul class="text-sm text-slate-200 list-disc ml-5 space-y-1">
+              <li><strong>Typo principale :</strong> Inter pour la lisibilité cabine.</li>
+              <li><strong>Typo signalétique :</strong> JetBrains Mono pour labels et statuts.</li>
+              <li><strong>Typo mood :</strong> Gaegu pour une touche tendre, sans excès.</li>
+              <li><strong>Palette :</strong> bleu nuit, ardoise, accents ciel et jaune terminal.</li>
+              <li><strong>Ton :</strong> aéroport privé, léger, complice, jamais trop bavard.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-                <div id="tab-vol" class="tab-panel active space-y-3">
-                    <div class="card">
-                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-1">Statut terminal</p>
-                        <p class="text-sm text-slate-700">Passagers validés ✅ · Embarquement détente en cours.</p>
-                    </div>
-                    <div class="card">
-                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-1">Prochaines missions</p>
-                        <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1">
-                            <li>Week-end plage + melon.</li>
-                            <li>Playlist décollage et sunset.</li>
-                            <li>Check valises cabine light.</li>
-                        </ul>
-                    </div>
-                </div>
+  <script>
+    const correctBirthday = '16/05/1988';
+    const correctSecret = 'mi corazon';
+    const unlockDate = new Date('2026-06-30T00:00:00');
+    let attemptsLeft = 5;
+    let loops = [];
 
-                <div id="tab-carnet" class="tab-panel space-y-3">
-                    <div class="card">
-                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-1">Rappels express</p>
-                        <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1">
-                            <li>Passeports et billets au même endroit.</li>
-                            <li>Chargeurs + écouteurs dans la poche avant.</li>
-                            <li>Message “bien arrivé” dès l’atterrissage.</li>
-                        </ul>
-                    </div>
-                </div>
+    const slot1Items = ['✈️','🛫','🛬','🚁','⛵'];
+    const slot2Items = ['☀️','🌤️','⛅','🌙','☁️'];
+    const slot3Items = ['🍆','🍓','🍉','🍍'];
+    const targets = ['✈️','☀️','🍆'];
+    const tracks = [document.getElementById('track1'), document.getElementById('track2'), document.getElementById('track3')];
 
-                <div id="tab-charte" class="tab-panel space-y-3">
-                    <div class="card">
-                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-2">Charte aéroport (légère)</p>
-                        <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1">
-                            <li><strong>Icônes:</strong> max 1 emoji par ligne d’info, style voyage uniquement (✈️, 🧳, 🛂, 🛬).</li>
-                            <li><strong>Typo principale:</strong> Inter (lisibilité).</li>
-                            <li><strong>Typo signalétique:</strong> JetBrains Mono pour labels et statuts.</li>
-                            <li><strong>Typo mood:</strong> Gaegu seulement pour une phrase signature.</li>
-                            <li><strong>Palette:</strong> base ardoise + accent ciel (sobre, pas de néon).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    function normalize(value) {
+      return value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
+    }
 
-    <script>
-        let attemptsLeft = 5;
+    function renderIcon(icon) {
+      return `<div class="slot-item"><div class="slot-icon">${icon}</div></div>`;
+    }
 
-        function normalize(value) {
-            return value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
+    function initLoop(trackEl, items, speed) {
+      const seq = [];
+      for (let i = 0; i < 24; i++) seq.push(...items);
+      trackEl.innerHTML = seq.map(renderIcon).join('');
+      let index = 0;
+      trackEl.style.transition = 'none';
+      trackEl.style.transform = 'translateY(0px)';
+      const loop = setInterval(() => {
+        index += 1;
+        trackEl.style.transition = `transform ${speed}ms linear`;
+        trackEl.style.transform = `translateY(-${index * 104}px)`;
+        if (index >= items.length * 13) {
+          setTimeout(() => {
+            trackEl.style.transition = 'none';
+            index = 0;
+            trackEl.style.transform = 'translateY(0px)';
+          }, speed + 20);
         }
+      }, speed + 40);
+      loops.push(loop);
+    }
 
-        function updateAttemptsLabel() {
-            const label = document.getElementById('attempts-label');
-            label.textContent = `Essais restants: ${attemptsLeft}`;
-            label.style.color = attemptsLeft <= 2 ? '#ef4444' : '#64748b';
-        }
+    function prepareSlots() {
+      stopSlots();
+      initLoop(tracks[0], slot1Items, 520);
+      initLoop(tracks[1], slot2Items, 620);
+      initLoop(tracks[2], slot3Items, 720);
+    }
 
-        function unlockHome() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('home-screen').classList.remove('hidden');
-        }
+    function stopSlots() {
+      loops.forEach(clearInterval);
+      loops = [];
+    }
 
-        function attemptLogin() {
-            const bday = normalize(document.getElementById('birthday').value);
-            const secret = normalize(document.getElementById('joke').value);
-            const btn = document.getElementById('login-btn');
+    function lockSlot(trackEl, items, target, duration) {
+      const seq = [];
+      for (let i = 0; i < 10; i++) seq.push(...items);
+      seq.push(target);
+      trackEl.innerHTML = seq.map(renderIcon).join('');
+      const finalIndex = seq.length - 1;
+      trackEl.style.transition = `transform ${duration}ms cubic-bezier(.16,.78,.16,1)`;
+      requestAnimationFrame(() => {
+        trackEl.style.transform = `translateY(-${finalIndex * 104}px)`;
+      });
+    }
 
-            const bdayOk = bday.includes('16/05') || bday.includes('16-05');
-            const secretOk = secret.includes('mi corazon') || secret.includes('corazon');
+    function updateAttemptsLabel() {
+      const label = document.getElementById('attempts-label');
+      label.textContent = `Essais restants: ${attemptsLeft}`;
+      label.style.color = attemptsLeft <= 2 ? '#fca5a5' : '#94a3b8';
+    }
 
-            if (bdayOk && secretOk) {
-                btn.innerText = 'Identité confirmée';
-                btn.style.backgroundColor = '#10b981';
-                setTimeout(unlockHome, 700);
-                return;
-            }
+    function unlockHome() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('home-screen').classList.remove('hidden');
+    }
 
-            attemptsLeft = Math.max(0, attemptsLeft - 1);
-            updateAttemptsLabel();
+    function attemptLogin() {
+      const bday = normalize(document.getElementById('birthday').value);
+      const secret = normalize(document.getElementById('joke').value);
+      const btn = document.getElementById('login-btn');
+      const status = document.getElementById('login-status');
 
-            btn.innerText = 'Erreur de sécurité';
-            btn.style.backgroundColor = '#ef4444';
+      const bdayOk = bday === normalize(correctBirthday);
+      const secretOk = secret.includes('mi corazon') || secret.includes('corazon');
 
-            if (attemptsLeft === 0) {
-                btn.innerText = 'Terminal verrouillé';
-                btn.disabled = true;
-                btn.classList.add('opacity-70', 'cursor-not-allowed');
-                return;
-            }
+      if (bdayOk && secretOk) {
+        status.textContent = 'Identité confirmée.';
+        btn.innerText = 'Accès autorisé';
+        btn.style.backgroundColor = '#10b981';
+        stopSlots();
+        lockSlot(tracks[0], slot1Items, targets[0], 1300);
+        lockSlot(tracks[1], slot2Items, targets[1], 1700);
+        lockSlot(tracks[2], slot3Items, targets[2], 2100);
+        setTimeout(unlockHome, 8000);
+        return;
+      }
 
-            setTimeout(() => {
-                btn.innerText = 'Validation sécurité';
-                btn.style.backgroundColor = '#0f172a';
-            }, 1200);
-        }
+      attemptsLeft = Math.max(0, attemptsLeft - 1);
+      updateAttemptsLabel();
+      status.textContent = "Une des deux sécurités n'est pas correcte.";
+      btn.innerText = 'Erreur de sécurité';
+      btn.style.backgroundColor = '#ef4444';
 
-        function initTabs() {
-            const buttons = document.querySelectorAll('.tab-btn');
-            const panels = document.querySelectorAll('.tab-panel');
+      if (attemptsLeft === 0) {
+        btn.innerText = 'Terminal verrouillé';
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+        return;
+      }
 
-            buttons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const target = button.dataset.tab;
+      setTimeout(() => {
+        btn.innerText = 'Entrer';
+        btn.style.backgroundColor = '#f8fafc';
+        btn.style.color = '#0f172a';
+      }, 1200);
+    }
 
-                    buttons.forEach((btn) => btn.classList.remove('active'));
-                    panels.forEach((panel) => panel.classList.remove('active'));
+    function initTabs() {
+      const buttons = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.tab-panel');
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const target = button.dataset.tab;
+          buttons.forEach((btn) => btn.classList.remove('active'));
+          panels.forEach((panel) => panel.classList.remove('active'));
+          button.classList.add('active');
+          document.getElementById(target).classList.add('active');
+        });
+      });
+    }
 
-                    button.classList.add('active');
-                    document.getElementById(target).classList.add('active');
-                });
-            });
-        }
+    function updateCountdown() {
+      const now = new Date();
+      const diff = Math.max(0, unlockDate.getTime() - now.getTime());
+      const s = Math.floor(diff / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      document.getElementById('countdown').innerHTML = [
+        ['Jours', d], ['Heures', h], ['Minutes', m], ['Secondes', sec]
+      ].map(([label, value]) => `
+        <div class="card text-center !p-3">
+          <div class="text-2xl font-black text-white">${String(value).padStart(2,'0')}</div>
+          <div class="mono text-[10px] uppercase tracking-widest text-slate-400">${label}</div>
+        </div>
+      `).join('');
+    }
 
-        updateAttemptsLabel();
-        initTabs();
-    </script>
+    function loadNotes() {
+      const raw = localStorage.getItem('betchi_tower_notes');
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem('betchi_tower_notes', JSON.stringify(notes));
+    }
+
+    function renderNotes() {
+      const list = document.getElementById('notes-list');
+      const notes = loadNotes();
+      if (!notes.length) {
+        list.innerHTML = '<p class="text-sm text-slate-400">Aucun message dans la tour pour le moment.</p>';
+        return;
+      }
+      list.innerHTML = notes.slice().reverse().map(note => `
+        <div class="note-item">
+          <p class="text-slate-100 whitespace-pre-wrap">${note.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+          <p class="text-[11px] text-slate-400 mono mt-1">${note.date}</p>
+        </div>
+      `).join('');
+    }
+
+    function addNote() {
+      const input = document.getElementById('tower-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const notes = loadNotes();
+      notes.push({
+        text,
+        date: new Date().toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })
+      });
+      saveNotes(notes);
+      input.value = '';
+      renderNotes();
+    }
+
+    function clearNotes() {
+      localStorage.removeItem('betchi_tower_notes');
+      renderNotes();
+    }
+
+    document.getElementById('login-btn').addEventListener('click', attemptLogin);
+    document.getElementById('birthday').addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptLogin(); });
+    document.getElementById('joke').addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptLogin(); });
+    document.getElementById('save-note-btn').addEventListener('click', addNote);
+    document.getElementById('clear-notes-btn').addEventListener('click', clearNotes);
+
+    updateAttemptsLabel();
+    prepareSlots();
+    initTabs();
+    updateCountdown();
+    renderNotes();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>

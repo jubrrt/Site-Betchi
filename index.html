@@ -5,48 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BETCHI.FR | Système de Vol</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --betchi-dark: #070a16; --betchi-blue: #0088ff; }
-        body { 
-            background: var(--betchi-dark); 
-            color: #bdc5d1; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        body { background: var(--betchi-dark); color: #bdc5d1; font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Typography */
         .betchi-title { font-size: 2.5rem; font-weight: 900; color: var(--betchi-blue); letter-spacing: -0.05em; }
-        .icon-blue { filter: invert(37%) sepia(93%) saturate(3958%) hue-rotate(196deg) brightness(101%) contrast(107%); }
         .info-label { font-family: 'Roboto Mono', monospace; text-transform: uppercase; font-size: 10px; color: #64748b; letter-spacing: 0.15em; margin-bottom: 6px; }
         .info-value { color: white; font-weight: 900; font-size: 1.5rem; line-height: 1.2; text-transform: uppercase; }
-        
-        /* Navigation & Boutons */
-        .btn-nav { background: transparent; border: 1px solid rgba(0, 136, 255, 0.4); transition: all 0.3s ease; font-family: 'Roboto Mono', monospace; display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; color: white; border-radius: 1rem; padding: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
-        .btn-nav:active { background: rgba(0, 136, 255, 0.2); transform: scale(0.98); }
+        .icon-blue { filter: invert(37%) sepia(93%) saturate(3958%) hue-rotate(196deg) brightness(101%) contrast(107%); }
+
+        /* Sections */
+        .page-section { display: none; width: 100%; max-width: 450px; margin: 0 auto; padding: 24px; }
+        .active-section { display: block; }
+
+        /* Security Input */
+        .code-input { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(51, 65, 85, 0.5); color: white; border-radius: 1rem; padding: 20px; font-size: 24px; font-family: 'Roboto Mono', monospace; text-align: center; letter-spacing: 0.5em; width: 100%; outline: none; }
         
         /* Progress Bar */
         .success-bar { background: rgba(255,255,255,0.1); height: 4px; border-radius: 10px; width: 50%; margin: 12px auto 0; overflow: hidden; }
         .success-fill { background: #ef4444; height: 100%; width: 3.7%; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
 
+        /* Buttons */
+        .btn-main { background: transparent; border: 1px solid rgba(0, 136, 255, 0.4); color: white; border-radius: 1.5rem; padding: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; width: 100%; transition: all 0.2s; font-family: 'Roboto Mono', monospace; }
+        .btn-main:active { background: rgba(0, 136, 255, 0.2); transform: scale(0.98); }
+        .btn-order { background: var(--betchi-blue); color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; border-radius: 1.5rem; padding: 1.5rem; width: 100%; }
+
         /* Maintenance Cards */
-        .service-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(51, 65, 85, 0.3); border-radius: 1.2rem; transition: all 0.2s ease; cursor: pointer; padding: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .service-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(51, 65, 85, 0.3); border-radius: 1.2rem; transition: all 0.2s ease; cursor: pointer; }
         .service-card:has(input:checked) { border-color: var(--betchi-blue); background: rgba(0, 136, 255, 0.1); }
-        .item-subtitle { font-size: 15px; font-weight: 700; color: white; line-height: 1.3; display: block; }
         .bc-tag { background: rgba(0, 136, 255, 0.15); color: var(--betchi-blue); font-family: 'Roboto Mono', monospace; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; }
         .bc-tag-reload { background: rgba(34, 197, 94, 0.15); color: #22c55e; font-family: 'Roboto Mono', monospace; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; }
 
-        /* Form elements */
         textarea, input[type="date"], select { background: rgba(15, 23, 42, 0.8) !important; border: 1px solid rgba(51, 65, 85, 0.5) !important; color: white !important; width: 100%; border-radius: 1rem; padding: 14px; outline: none; }
-        .btn-order { background: var(--betchi-blue); color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; border-radius: 1.5rem; padding: 1.5rem; width: 100%; }
-
-        /* Utilities */
-        .hidden-section { display: none; }
     </style>
 </head>
-<body class="p-6">
+<body>
 
-    <div id="page-home" class="max-w-md mx-auto text-center">
+    <div id="sec-auth" class="page-section active-section flex flex-col items-center justify-center min-h-screen text-center">
+        <p class="info-label mb-8">Identification Requise</p>
+        <div class="w-full space-y-6">
+            <input type="password" id="pass-code" class="code-input" placeholder="••••" maxlength="4" inputmode="numeric">
+            <button onclick="checkAuth()" class="btn-main">Accéder au système</button>
+        </div>
+        <p id="auth-error" class="text-red-500 text-[10px] mt-4 font-mono uppercase hidden">Code erroné. Accès refusé.</p>
+    </div>
+
+    <div id="sec-dash" class="page-section text-center pt-10">
         <header class="flex flex-col items-center mb-10">
             <img src="https://static.thenounproject.com/png/178847-200.png" alt="Avion" class="w-12 h-auto mb-2 icon-blue opacity-90">
             <h1 class="betchi-title">BETCHI.FR</h1>
@@ -63,75 +69,77 @@
             </div>
         </div>
 
-        <button onclick="showPage('page-maintenance')" class="btn-nav">
-            <span class="text-xl">❤️</span> Faire de la maintenance
-        </button>
-        
-        <footer class="mt-16 text-[9px] font-mono text-slate-600 uppercase tracking-widest">BETCHI OS v2.4 — 2026</footer>
+        <button onclick="showSection('sec-maint')" class="btn-main">❤️ Faire de la maintenance</button>
     </div>
 
-    <div id="page-maintenance" class="max-w-md mx-auto hidden-section">
+    <div id="sec-maint" class="page-section pt-6">
+        <button onclick="showSection('sec-dash')" class="info-label text-blue-500 mb-6 block">← Retour Dashboard</button>
+        
         <header class="text-center mb-8">
-            <button onclick="showPage('page-home')" class="info-label text-blue-500 mb-6 block">← Retour Dashboard</button>
-            <p class="text-blue-500 font-bold text-sm mb-4">La maintenance augmente le taux de réussite du vol</p>
+            <p class="text-blue-500 font-bold text-sm italic mb-4">La maintenance augmente le taux de réussite du vol</p>
             <div class="border-b border-slate-800 pb-4">
-                <p class="info-label">Crédits actuels</p>
+                <p class="info-label">Crédits disponibles</p>
                 <p class="text-white font-bold text-xl">20 <span class="text-blue-500 font-mono text-sm">Betcoins</span></p>
             </div>
         </header>
 
         <div class="space-y-3 mb-10">
-            <p class="info-label px-1">Choisir les opérations</p>
-            
-            <label class="service-card"><input type="checkbox" class="hidden" data-name="Papouilles"><div><span class="info-label">Bichonner l'appareil</span><span class="item-subtitle">30 min de papouilles dans les cheveux</span></div><span class="bc-tag">5 BC</span></label>
-            <label class="service-card"><input type="checkbox" class="hidden" data-name="Porc Caramel"><div><span class="info-label">Ravitaillement Moteur</span><span class="item-subtitle">Le meilleur porc au caramel de l'univers</span></div><span class="bc-tag">7 BC</span></label>
-            <label class="service-card"><input type="checkbox" class="hidden" data-name="Massage Intégral"><div><span class="info-label">Révision totale</span><span class="item-subtitle">1h de massage intégral</span></div><span class="bc-tag">16 BC</span></label>
-            <label class="service-card"><input type="checkbox" class="hidden" data-name="Appel Pilote"><div><span class="info-label">Test connexion</span><span class="item-subtitle">Parler de tout et de rien avec le pilote</span></div><span class="bc-tag">1 BC</span></label>
-            <label class="service-card"><input type="checkbox" class="hidden" data-name="Prendre Créole"><div><span class="info-label">Upgrade Endorphine</span><span class="item-subtitle">Prendre le créole</span></div><span class="bc-tag-reload">-18 BC</span></label>
-            <label class="service-card"><input type="checkbox" class="hidden" data-name="Voyage Pilote"><div><span class="info-label">Repos matériel</span><span class="item-subtitle">Partir avec le pilote</span></div><span class="bc-tag">12 BC</span></label>
+            <p class="info-label">Opérations recommandées</p>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Papouilles"><div class="flex-1"><span class="info-label">Bichonner l'appareil</span><span class="block text-white font-bold text-[15px]">30 min de papouilles dans les cheveux</span></div><span class="bc-tag">5 BC</span></label>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Porc Caramel"><div class="flex-1"><span class="info-label">Ravitaillement Moteur</span><span class="block text-white font-bold text-[15px]">Le meilleur porc au caramel de l'univers</span></div><span class="bc-tag">7 BC</span></label>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Massage intégral"><div class="flex-1"><span class="info-label">Révision totale</span><span class="block text-white font-bold text-[15px]">1h de massage intégral</span></div><span class="bc-tag">16 BC</span></label>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Appel Pilote"><div class="flex-1"><span class="info-label">Test connexion</span><span class="block text-white font-bold text-[15px]">Appeler et parler de tout et de rien avec le pilote</span></div><span class="bc-tag">1 BC</span></label>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Apprendre Créole"><div class="flex-1"><span class="info-label">Upgrade Communication</span><span class="block text-white font-bold text-[15px]">Apprendre le créole</span></div><span class="bc-tag">4 BC</span></label>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Prendre Créole (+)"><div class="flex-1"><span class="info-label">Upgrade Endorphine</span><span class="block text-white font-bold text-[15px]">Prendre le créole</span></div><span class="bc-tag-reload">-18 BC</span></label>
+            <label class="service-card p-4 flex items-center justify-between gap-4"><input type="checkbox" class="hidden" data-name="Voyage Pilote"><div class="flex-1"><span class="info-label">Repos matériel</span><span class="block text-white font-bold text-[15px]">Partir avec le pilote</span></div><span class="bc-tag">12 BC</span></label>
         </div>
 
-        <div class="space-y-6 mb-10">
-            <div><p class="info-label italic">Demande sur mesure</p><textarea id="custom-req" placeholder="Décrivez votre besoin spécifique..."></textarea></div>
+        <div class="space-y-6 mb-10 border-t border-slate-800 pt-8">
+            <div><p class="info-label italic">Demande sur mesure</p><textarea id="custom-req" placeholder="Décrivez votre besoin..." class="h-24"></textarea></div>
             <div><p class="info-label">Date souhaitée</p><input type="date" id="order-date"></div>
-            <div><p class="info-label">Mode de règlement</p><select id="payment-mode"><option>En BETcoins</option><option>4x en nature sans frais</option></select></div>
+            <div><p class="info-label">Mode de règlement</p><select id="pay-mode"><option>En BETcoins (Débit immédiat)</option><option>4x en nature sans frais</option></select></div>
         </div>
 
         <button onclick="passerCommande()" class="btn-order active:scale-95 transition-all">Passer commande</button>
-        
-        <div id="success-msg" class="hidden mt-6 p-6 rounded-2xl border border-green-500 bg-green-500/10 text-green-500 text-center font-bold text-sm">
-            Demande enregistrée.<br>Redirection vers le pilote...
-        </div>
+        <div id="success-msg" class="hidden mt-4 p-4 rounded-xl border border-green-500 bg-green-500/10 text-green-500 text-center font-bold text-xs uppercase tracking-widest">Traitement de l'ordre...</div>
     </div>
 
     <script>
-        function showPage(pageId) {
-            document.getElementById('page-home').classList.add('hidden-section');
-            document.getElementById('page-maintenance').classList.add('hidden-section');
-            document.getElementById(pageId).classList.remove('hidden-section');
+        // Le code est "1234" par défaut pour l'exemple
+        function checkAuth() {
+            const input = document.getElementById('pass-code').value;
+            if(input === "1234") {
+                showSection('sec-dash');
+            } else {
+                document.getElementById('auth-error').classList.remove('hidden');
+            }
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
             window.scrollTo(0,0);
         }
 
         function passerCommande() {
-            const numero = "33695300351";
-            let services = [];
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => services.push(el.getAttribute('data-name')));
+            const tel = "33695300351";
+            let actions = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(c => actions.push(c.getAttribute('data-name')));
             
             const date = document.getElementById('order-date').value;
-            const custom = document.getElementById('custom-req').value;
-            const pay = document.getElementById('payment-mode').value;
+            const note = document.getElementById('custom-req').value;
+            const payment = document.getElementById('pay-mode').value;
             
-            let message = `🛠️ *BETCHI.FR : ORDRE DE MAINTENANCE* \n\n`;
-            message += `✅ *Actions :* ${services.length > 0 ? services.join(', ') : 'Aucune'}\n`;
-            if(date) message += `📅 *Date :* ${date}\n`;
-            if(custom) message += `✍️ *Note :* ${custom}\n`;
-            message += `💰 *Règlement :* ${pay}`;
+            let txt = `🛠️ *BETCHI.FR : MAINTENANCE* \n\n`;
+            txt += `✅ *Opérations :* ${actions.length > 0 ? actions.join(', ') : 'Aucune'}\n`;
+            if(date) txt += `📅 *Date :* ${date}\n`;
+            if(note) txt += `✍️ *Note :* ${note}\n`;
+            txt += `💰 *Règlement :* ${payment}`;
 
-            document.getElementById('success-msg').classList.remove('hidden-section');
-            
+            document.getElementById('success-msg').classList.remove('hidden');
             setTimeout(() => {
-                window.open(`https://wa.me/${numero}?text=${encodeURIComponent(message)}`, '_blank');
-            }, 1200);
+                window.open(`https://wa.me/${tel}?text=${encodeURIComponent(txt)}`, '_blank');
+            }, 1000);
         }
     </script>
 </body>

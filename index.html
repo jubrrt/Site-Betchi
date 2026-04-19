@@ -1,767 +1,178 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Betchi</title>
-  <style>
-    :root {
-      --bg: #fffdf9;
-      --paper: rgba(255,255,255,0.9);
-      --line: rgba(214,111,77,0.14);
-      --line-strong: rgba(214,111,77,0.28);
-      --text: #251d19;
-      --muted: #82766f;
-      --accent: #d86f4d;
-      --accent-soft: #ea9a7d;
-      --good: #617f57;
-      --bad: #b85e46;
-      --shadow: 0 18px 40px rgba(120, 82, 63, 0.08);
-      --radius: 24px;
-      --item-h: 104px;
-    }
-
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body { position: relative; overflow-x: hidden; }
-
-    .wallpaper {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 1;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23d86f4d' stroke-opacity='0.16' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='48' cy='50' r='14'/%3E%3Cpath d='M48 27v10M48 63v10M25 50h10M61 50h10M32 34l7 7M57 59l7 7M32 66l7-7M57 41l7-7'/%3E%3Cpath d='M132 44l18 0m-9-9l0 18'/%3E%3Cpath d='M176 48l16-7l-7 16'/%3E%3Cpath d='M170 145c8-12 21-12 29 0c-8 12-21 12-29 0z'/%3E%3Cpath d='M116 104c6-10 16-10 22 0c-6 10-16 10-22 0z'/%3E%3Cpath d='M45 178l14 0'/%3E%3Cpath d='M38 171l7 7l-7 7'/%3E%3Cpath d='M108 198l14-6l-6 14'/%3E%3Cpath d='M210 198c7 0 13 6 13 13'/%3E%3Cpath d='M212 83l12 0'/%3E%3Cpath d='M218 77l0 12'/%3E%3Cpath d='M74 120l18-8l-8 18'/%3E%3Cpath d='M157 221c7-10 17-10 24 0c-7 10-17 10-24 0z'/%3E%3C/g%3E%3Cg fill='%23d86f4d' fill-opacity='0.14'%3E%3Cpath d='M90 28c1.7-3.3 5.7-3.3 7.4 0c1.7-3.3 5.7-3.3 7.4 0c0 4-7.4 7.8-7.4 7.8s-7.4-3.8-7.4-7.8z'/%3E%3Cpath d='M214 138c1.5-2.8 4.9-2.8 6.4 0c1.5-2.8 4.9-2.8 6.4 0c0 3.4-6.4 6.7-6.4 6.7s-6.4-3.3-6.4-6.7z'/%3E%3Cpath d='M32 226c1.5-2.8 4.9-2.8 6.4 0c1.5-2.8 4.9-2.8 6.4 0c0 3.4-6.4 6.7-6.4 6.7s-6.4-3.3-6.4-6.7z'/%3E%3C/g%3E%3C/svg%3E");
-      background-size: 250px 250px;
-    }
-
-    .app {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 860px;
-      margin: 0 auto;
-      padding: max(16px, env(safe-area-inset-top)) 14px max(28px, env(safe-area-inset-bottom));
-    }
-
-    .screen { display: none; }
-    .screen.active { display: block; }
-
-    .card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-
-    .gate-wrap {
-      min-height: calc(100vh - 40px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .gate-card {
-      width: 100%;
-      padding: 22px 16px 18px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-    }
-
-    .title {
-      margin: 0 0 18px;
-      font-size: clamp(1.9rem, 8vw, 3.2rem);
-      line-height: 0.96;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-    }
-
-    .slots-shell { margin: 16px auto 22px; }
-    .slots-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .slot-window {
-      position: relative;
-      height: 154px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255,255,255,0.76);
-    }
-
-    .slot-window::before,
-    .slot-window::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 22px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .slot-window::before {
-      top: 0;
-      background: linear-gradient(to bottom, rgba(255,253,249,0.98), rgba(255,253,249,0));
-    }
-
-    .slot-window::after {
-      bottom: 0;
-      background: linear-gradient(to top, rgba(255,253,249,0.98), rgba(255,253,249,0));
-    }
-
-    .slot-focus {
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      top: 50%;
-      height: var(--item-h);
-      transform: translateY(-50%);
-      border: 1.5px solid var(--line-strong);
-      border-radius: 18px;
-      z-index: 2;
-      background: rgba(255,255,255,0.18);
-      pointer-events: none;
-    }
-
-    .slot-track {
-      transform: translateY(0px);
-      transition: transform 1700ms cubic-bezier(.16,.78,.16,1);
-    }
-
-    .slot-item {
-      height: var(--item-h);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-    }
-
-    .slot-icon {
-      font-size: 2.15rem;
-      line-height: 1;
-      color: #6c615c;
-    }
-
-    .security-block {
-      text-align: left;
-      margin: 0 auto 16px;
-      max-width: 430px;
-    }
-
-    .security-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .security-text {
-      margin: 0 0 10px;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.96rem;
-    }
-
-    input, textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.84);
-      border-radius: 16px;
-      padding: 14px 16px;
-      font: inherit;
-      color: var(--text);
-      outline: none;
-    }
-
-    textarea { min-height: 108px; resize: vertical; }
-
-    input:focus, textarea:focus {
-      border-color: var(--line-strong);
-      box-shadow: 0 0 0 4px rgba(216,111,77,0.08);
-    }
-
-    button, .button-link {
-      appearance: none;
-      border: 0;
-      border-radius: 999px;
-      padding: 13px 18px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 120ms ease, opacity 120ms ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-
-    button:hover, .button-link:hover { transform: translateY(-1px); }
-    button:disabled { opacity: 0.55; cursor: wait; }
-
-    .primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-      color: white;
-    }
-
-    .secondary {
-      background: rgba(216,111,77,0.08);
-      border: 1px solid var(--line);
-      color: var(--accent);
-    }
-
-    .status {
-      min-height: 22px;
-      margin-top: 10px;
-      font-size: 0.92rem;
-      color: var(--muted);
-    }
-
-    .status.error { color: var(--bad); }
-    .status.ok { color: var(--good); }
-
-    .menu-screen { animation: fadeIn 280ms ease; }
-    .countdown-top { text-align: center; margin-bottom: 18px; }
-    .big-time {
-      margin: 0 0 12px;
-      font-size: clamp(1.15rem, 5vw, 1.7rem);
-      line-height: 1;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-weight: 800;
-    }
-
-    .countdown-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .time-box {
-      background: rgba(255,255,255,0.8);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px 8px;
-      box-shadow: var(--shadow);
-    }
-
-    .time-box strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 1.45rem;
-      color: var(--accent);
-    }
-
-    .time-box span {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .menu-layout { display: grid; gap: 16px; }
-    .section-card, .sidebar-card, .pilot-card { padding: 18px; }
-
-    .section-head {
-      text-align: center;
-      margin-bottom: 14px;
-    }
-
-    .section-head h2, .sidebar-title, .pilot-card h3 {
-      margin: 0 0 8px;
-      font-size: 0.98rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .section-head p, .pilot-card p, .special-text, .note {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.94rem;
-    }
-
-    .menu-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .menu-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 12px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.8);
-    }
-
-    .menu-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin: 0;
-      accent-color: var(--accent);
-    }
-
-    .menu-label { font-size: 0.95rem; line-height: 1.35; }
-    .price { font-weight: 800; color: var(--accent); white-space: nowrap; }
-
-    .special-request { margin-top: 18px; display: grid; gap: 10px; }
-    .special-title {
-      margin: 0;
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .cart-total {
-      margin-bottom: 6px;
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .cart-remaining {
-      margin-bottom: 14px;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.94rem;
-    }
-
-    .summary-list {
-      display: grid;
-      gap: 9px;
-      margin-bottom: 16px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.35;
-    }
-
-    .sidebar-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .upgrade-box {
-      display: none;
-      margin-top: 12px;
-      padding: 12px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 16px;
-      background: rgba(216,111,77,0.05);
-    }
-
-    .upgrade-box.active { display: block; }
-
-    .upgrade-title {
-      margin: 0 0 8px;
-      color: var(--accent);
-      font-size: 0.92rem;
-      font-weight: 700;
-    }
-
-    .upgrade-actions {
-      display: grid;
-      gap: 8px;
-    }
-
-    .danger-note {
-      min-height: 20px;
-      margin-top: 6px;
-      color: var(--bad);
-      font-size: 0.88rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 420px) {
-      .countdown-grid, .sidebar-actions { grid-template-columns: 1fr 1fr; }
-      .menu-item { grid-template-columns: auto 1fr; }
-      .price { grid-column: 2; }
-    }
-  </style>
-</head>
-<body>
-  <div class="wallpaper"></div>
-
-  <div class="app">
-    <section id="gateScreen" class="screen active">
-      <div class="gate-wrap">
-        <div class="card gate-card">
-          <div class="eyebrow">Private access</div>
-          <h1 class="title">BIENVENUE</h1>
-
-          <div class="slots-shell">
-            <div class="slots-grid">
-              <div class="slot-window">
-                <div class="slot-focus"></div>
-                <div id="track1" class="slot-track"></div>
-              </div>
-              <div class="slot-window">
-                <div class="slot-focus"></div>
-                <div id="track2" class="slot-track"></div>
-              </div>
-              <div class="slot-window">
-                <div class="slot-focus"></div>
-                <div id="track3" class="slot-track"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="security-block">
-            <div class="security-label">🔒 Sécurité 1</div>
-            <p class="security-text">Quelqu'un a envie de prendre l'avion. Rentre sa date de naissance pour entrer.</p>
-            <input id="passwordInput" type="text" placeholder="Ex : 20/02/1989" />
-          </div>
-
-          <div class="security-block">
-            <div class="security-label">🎵 Sécurité 2</div>
-            <p class="security-text">Que hora son ?</p>
-            <input id="security2Input" type="text" placeholder="Votre réponse" />
-          </div>
-
-          <button id="checkButton" class="primary" type="button">Entrer</button>
-          <div id="gateStatus" class="status"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="menuScreen" class="screen menu-screen">
-      <div class="countdown-top">
-        <h1 class="big-time">BIG TIME</h1>
-        <div id="countdown" class="countdown-grid"></div>
-      </div>
-
-      <div class="menu-layout">
-        <div class="card section-card">
-          <div class="section-head">
-            <h2>Bienvenue au comptoir Betchi ✈️ ☀️ 🍆 ❤️</h2>
-            <p>Tu disposes de <strong>20 BETcoin</strong> disponibles à la carte :</p>
-          </div>
-
-          <div class="menu-list">
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Le meilleur porc au caramel" data-price="6" />
-              <span class="menu-label">Le meilleur porc au caramel</span>
-              <span class="price">6 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Prendre un cours de Créole autour d'un verre" data-price="4" />
-              <span class="menu-label">Prendre un cours de Créole autour d'un verre</span>
-              <span class="price">4 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Prendre le créol" data-price="-19" />
-              <span class="menu-label">Prendre le créol</span>
-              <span class="price">-19 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Forfait Manapany : Samoussa, ti-punch, petit plat, initiation au zouk et dessert des iles" data-price="8" />
-              <span class="menu-label">Forfait Manapany : Samoussa, ti-punch, petit plat, initiation au zouk et dessert des iles</span>
-              <span class="price">8 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Demander un Coach sportif" data-price="4" />
-              <span class="menu-label">Demander un Coach sportif</span>
-              <span class="price">4 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Formule petit déjeuner" data-price="6" />
-              <span class="menu-label">Formule petit déjeuner</span>
-              <span class="price">6 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Partir un jouuuuuuuur (ou deux)" data-price="14" />
-              <span class="menu-label">Partir un jouuuuuuuur (ou deux)</span>
-              <span class="price">14 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Le meilleur massage du monde" data-price="10" />
-              <span class="menu-label">Le meilleur massage du monde</span>
-              <span class="price">10 BC</span>
-            </label>
-
-            <label class="menu-item">
-              <input type="checkbox" class="menu-check" data-name="Et pourquoi pas un petit appel de courtoisie tout simplement ?" data-price="1" />
-              <span class="menu-label">Et pourquoi pas un petit appel de courtoisie tout simplement ?</span>
-              <span class="price">1 BC</span>
-            </label>
-          </div>
-
-          <div class="special-request">
-            <p class="special-title">Une demande particulière ?</p>
-            <p class="special-text">Vous êtes beaucoup trop sex pour qu'on vous dise non...</p>
-            <textarea placeholder="Votre demande..."></textarea>
-            <button class="secondary" type="button">Faire la demande</button>
-          </div>
-        </div>
-
-        <div>
-          <div class="card sidebar-card">
-            <h3 class="sidebar-title">Mon panier</h3>
-            <div id="cartTotal" class="cart-total">0 BC</div>
-            <div id="cartRemaining" class="cart-remaining">Il vous reste 20 BC.</div>
-
-            <div id="summaryList" class="summary-list">
-              <div class="summary-row"><span>Aucune sélection pour le moment</span><span>0 BC</span></div>
-            </div>
-
-            <div class="sidebar-actions">
-              <button id="orderButton" class="primary" type="button">Passer commande</button>
-              <button class="secondary" type="button">Choisir une date et une heure</button>
-            </div>
-
-            <p class="note">Découvrez nos solutions de paiement en plusieurs fois en nature.</p>
-
-            <div id="upgradeBox" class="upgrade-box">
-              <p class="upgrade-title">Il vous manque quelques BETcoin.</p>
-              <div class="upgrade-actions">
-                <button class="secondary" type="button">Payer en nature</button>
-                <button class="secondary" type="button">Envoyer un compliment</button>
-                <button class="secondary" type="button">Envoyer un nude</button>
-              </div>
-            </div>
-
-            <div id="cartWarning" class="danger-note"></div>
-          </div>
-
-          <div class="card pilot-card" style="margin-top:16px; padding:18px;">
-            <h3>Contacter ou envoyer un nude au pilote</h3>
-            <p>🔥 C'est lui qui pilote</p>
-            <div style="margin-top:14px;">
-              <a class="button-link primary" href="https://www.instagram.com/julien_brrt/" target="_blank" rel="noopener noreferrer">Contacter</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <script>
-    const correctPassword = "16/05/1988";
-    const correctSecurity2 = "mi corazon";
-    const unlockDate = new Date("2026-06-30T00:00:00");
-    const itemHeight = 104;
-    const slot1Items = ["☀️","🌧️","☁️","🌙","⛅"];
-    const slot2Items = ["✈️","🚄","🚗","⛵","🚁"];
-    const slot3Items = ["🍆","🍉","🍍","🍓"];
-    const slotTargets = ["☀️","✈️","🍆"];
-    const budget = 20;
-
-    const gateScreen = document.getElementById("gateScreen");
-    const menuScreen = document.getElementById("menuScreen");
-    const passwordInput = document.getElementById("passwordInput");
-    const security2Input = document.getElementById("security2Input");
-    const checkButton = document.getElementById("checkButton");
-    const gateStatus = document.getElementById("gateStatus");
-    const countdownEl = document.getElementById("countdown");
-    const cartTotalEl = document.getElementById("cartTotal");
-    const cartRemainingEl = document.getElementById("cartRemaining");
-    const summaryListEl = document.getElementById("summaryList");
-    const cartWarning = document.getElementById("cartWarning");
-    const upgradeBox = document.getElementById("upgradeBox");
-    const orderButton = document.getElementById("orderButton");
-    const menuChecks = Array.from(document.querySelectorAll(".menu-check"));
-    const tracks = [
-      document.getElementById("track1"),
-      document.getElementById("track2"),
-      document.getElementById("track3")
-    ];
-
-    let gateLoops = [];
-
-    function normalize(value) {
-      return value.trim().toLowerCase().replace(/\s+/g, " ");
-    }
-
-    function renderIcon(icon) {
-      return `<div class="slot-item"><div class="slot-icon">${icon}</div></div>`;
-    }
-
-    function initLoopingTrack(trackEl, items, speed) {
-      const sequence = [];
-      for (let i = 0; i < 22; i += 1) sequence.push(...items);
-      trackEl.innerHTML = sequence.map(renderIcon).join("");
-      let index = 0;
-      trackEl.style.transition = "none";
-      trackEl.style.transform = "translateY(0px)";
-      const loop = setInterval(() => {
-        index += 1;
-        trackEl.style.transition = `transform ${speed}ms linear`;
-        trackEl.style.transform = `translateY(-${index * itemHeight}px)`;
-        if (index >= items.length * 12) {
-          setTimeout(() => {
-            trackEl.style.transition = "none";
-            index = 0;
-            trackEl.style.transform = "translateY(0px)";
-          }, speed + 30);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BETCHI.FR | Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0a0a0a; --gold: #d4af37; }
+        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Roulette Animation */
+        .slot-machine { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .slot-column { 
+            width: 70px; height: 90px; border: 1px solid #333; 
+            overflow: hidden; position: relative; background: #1a1a1a; border-radius: 12px;
         }
-      }, speed + 40);
-      gateLoops.push(loop);
-    }
+        .slot-strip { display: flex; flex-direction: column; align-items: center; transition: transform 3s cubic-bezier(0.45, 0.05, 0.55, 0.95); }
+        .slot-item { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
 
-    function stopGateLoops() {
-      gateLoops.forEach(loop => clearInterval(loop));
-      gateLoops = [];
-    }
+        /* iPhone Specific */
+        input { font-size: 16px !important; } /* Empêche le zoom iOS */
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen items-center justify-center p-6">
 
-    function lockTrackToTarget(trackEl, items, targetIcon, duration) {
-      const sequence = [];
-      for (let i = 0; i < 10; i += 1) sequence.push(...items);
-      sequence.push(targetIcon);
-      trackEl.innerHTML = sequence.map(renderIcon).join("");
-      const finalIndex = sequence.length - 1;
-      trackEl.style.transition = `transform ${duration}ms cubic-bezier(.16,.78,.16,1)`;
-      requestAnimationFrame(() => {
-        trackEl.style.transform = `translateY(-${finalIndex * itemHeight}px)`;
-      });
-    }
+    <div id="login-screen" class="w-full max-w-md space-y-8 animate-fade-in">
+        <div class="text-center space-y-2">
+            <h1 class="mono text-xs tracking-widest text-gray-500 uppercase">Identification Tour de Contrôle</h1>
+            <p class="text-sm text-gray-300 italic">"Veuillez vous identifier pour pénétrer cet espace aérien sécurisé"</p>
+        </div>
 
-    function prepareGate() {
-      stopGateLoops();
-      initLoopingTrack(tracks[0], slot1Items, 520);
-      initLoopingTrack(tracks[1], slot2Items, 620);
-      initLoopingTrack(tracks[2], slot3Items, 720);
-    }
+        <div class="glass p-8 rounded-3xl space-y-6">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2">Quelqu'un a très envie de prendre l'avion...</label>
+                    <input type="text" id="birthday" placeholder="JJ/MM/AAAA" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:border-blue-500 outline-none transition">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-xs uppercase tracking-wider text-gray-400">¿Que hora son?</label>
+                        <span class="text-lg">🎵</span>
+                    </div>
+                    <input type="text" id="joke" placeholder="Ta réponse..." class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:border-blue-500 outline-none transition">
+                </div>
+            </div>
 
-    function checkPassword() {
-      const ok1 = normalize(passwordInput.value) === normalize(correctPassword);
-      const ok2 = normalize(security2Input.value) === normalize(correctSecurity2);
+            <div class="slot-machine" id="slots">
+                <div class="slot-column"><div class="slot-strip" id="strip1"></div></div>
+                <div class="slot-column"><div class="slot-strip" id="strip2"></div></div>
+                <div class="slot-column"><div class="slot-strip" id="strip3"></div></div>
+                <div class="slot-column"><div class="slot-strip" id="strip4"></div></div>
+            </div>
 
-      if (!ok1 || !ok2) {
-        gateStatus.textContent = "Une des deux sécurités n'est pas correcte.";
-        gateStatus.className = "status error";
-        return;
-      }
+            <button onclick="checkAccess()" class="w-full bg-white text-black font-bold py-4 rounded-xl active:scale-95 transition transform">
+                ENTRER
+            </button>
+        </div>
+    </div>
 
-      gateStatus.textContent = "";
-      gateStatus.className = "status ok";
-      checkButton.disabled = true;
-      stopGateLoops();
-      lockTrackToTarget(tracks[0], slot1Items, slotTargets[0], 1300);
-      lockTrackToTarget(tracks[1], slot2Items, slotTargets[1], 1700);
-      lockTrackToTarget(tracks[2], slot3Items, slotTargets[2], 2100);
+    <div id="main-site" class="hidden w-full max-w-md pb-32">
+        <header class="flex justify-between items-center mb-10">
+            <h2 class="mono font-bold text-xl text-blue-400">BETCHI.FR</h2>
+            <div class="text-right">
+                <p class="text-[10px] uppercase text-gray-500">Crédit</p>
+                <p class="text-lg font-bold">1 000 000 <span class="text-xs text-blue-400">BETcoins</span></p>
+            </div>
+        </header>
 
-      setTimeout(() => {
-        gateScreen.classList.remove("active");
-        menuScreen.classList.add("active");
-      }, 8000);
-    }
+        <div class="glass p-6 rounded-3xl mb-6 text-center">
+            <p class="text-xs uppercase tracking-widest text-gray-400 mb-2">Bordeaux - Ludovico Einaudi</p>
+            <div id="countdown" class="text-2xl font-light mono tracking-tighter"></div>
+        </div>
 
-    function updateCountdown() {
-      const now = new Date();
-      const diff = unlockDate.getTime() - now.getTime();
-      const safe = Math.max(0, diff);
-      const totalSeconds = Math.floor(safe / 1000);
-      const days = Math.floor(totalSeconds / 86400);
-      const hours = Math.floor((totalSeconds % 86400) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-      const boxes = [[days, "Jours"], [hours, "Heures"], [minutes, "Minutes"], [seconds, "Secondes"]];
-      countdownEl.innerHTML = boxes.map(([value, label]) => `<div class="time-box"><strong>${String(value).padStart(2, "0")}</strong><span>${label}</span></div>`).join("");
-    }
+        <section class="space-y-4">
+            <h3 class="text-sm font-semibold uppercase text-gray-500 ml-2">Le Menu Privé</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-4 rounded-2xl active:bg-white/10 transition">
+                    <span class="text-2xl">🍝</span>
+                    <p class="text-sm mt-2">Plat Préféré</p>
+                    <p class="text-xs text-blue-400">50 BET</p>
+                </div>
+                <div class="glass p-4 rounded-2xl active:bg-white/10 transition">
+                    <span class="text-2xl">🍷</span>
+                    <p class="text-sm mt-2">Dîner Retrouvailles</p>
+                    <p class="text-xs text-blue-400">Gratuit</p>
+                </div>
+            </div>
+        </section>
 
-    function getSelectedItems() {
-      return menuChecks.filter(check => check.checked).map(check => ({
-        name: check.dataset.name,
-        price: Number(check.dataset.price)
-      }));
-    }
+        <section class="mt-10 space-y-4">
+            <h3 class="text-sm font-semibold uppercase text-gray-500 ml-2">Le Mur de Betchi</h3>
+            <div id="message-list" class="space-y-3 mb-4 max-h-60 overflow-y-auto">
+                <div class="glass p-4 rounded-2xl border-l-4 border-blue-500 italic text-sm">
+                    "Je suis passé par ici pour te dire que je pense à toi..."
+                </div>
+            </div>
+            <textarea id="msg-input" placeholder="Laisser un mot doux..." class="w-full bg-white/5 rounded-2xl p-4 text-sm outline-none border border-white/10 h-24"></textarea>
+            <button onclick="sendMessage()" class="w-full bg-blue-600 py-3 rounded-xl text-sm font-bold">DÉPOSER LE MOT</button>
+        </section>
+    </div>
 
-    function updateCart() {
-      const items = getSelectedItems();
-      const total = items.reduce((sum, item) => sum + item.price, 0);
-      const remaining = budget - total;
-      cartTotalEl.textContent = `${total} BC`;
-      cartRemainingEl.textContent = remaining >= 0 ? `Il vous reste ${remaining} BC.` : `Dépassement de ${Math.abs(remaining)} BC.`;
+    <div class="fixed bottom-0 left-0 w-full p-4 glass rounded-t-3xl">
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/52fR5A16nAtP60L39j3G8p?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
 
-      if (!items.length) {
-        summaryListEl.innerHTML = `<div class="summary-row"><span>Aucune sélection pour le moment</span><span>0 BC</span></div>`;
-      } else {
-        summaryListEl.innerHTML = items.map(item => `<div class="summary-row"><span>${item.name}</span><strong>${item.price} BC</strong></div>`).join("");
-      }
+    <script>
+        const symbols = ['✈️', '☀️', '🌮', '🫶', '🍷', '🍆', '🌊', '🚆', '🥑'];
+        const targets = ['✈️', '☀️', '🌮', '🫶'];
+        
+        // Initialisation de la roulette
+        function initSlots() {
+            [1,2,3,4].forEach(id => {
+                const strip = document.getElementById(`strip${id}`);
+                for(let i=0; i<30; i++) {
+                    const item = document.createElement('div');
+                    item.className = 'slot-item';
+                    item.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                    strip.appendChild(item);
+                }
+                // Placer le symbole gagnant à la fin
+                const win = document.createElement('div');
+                win.className = 'slot-item';
+                win.innerText = targets[id-1];
+                strip.appendChild(win);
+            });
+        }
+        initSlots();
 
-      upgradeBox.classList.toggle("active", remaining < 0);
-      cartWarning.textContent = remaining < 0 ? "Le panier dépasse le budget disponible." : "";
-    }
+        function checkAccess() {
+            const bday = document.getElementById('birthday').value;
+            const joke = document.getElementById('joke').value.toLowerCase();
+            const btn = document.querySelector('button');
+            
+            // Logique de validation
+            if(bday.includes("16/05") && (joke.includes("mi corazon") || joke.includes("corazon"))) {
+                // Succès : Animation roulette
+                [1,2,3,4].forEach(id => {
+                    document.getElementById(`strip${id}`).style.transform = `translateY(-${30 * 90}px)`;
+                });
+                
+                setTimeout(() => {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('main-site').classList.remove('hidden');
+                }, 3500);
+            } else {
+                btn.classList.add('bg-red-500');
+                setTimeout(() => btn.classList.remove('bg-red-500'), 500);
+            }
+        }
 
-    function placeOrder() {
-      const items = getSelectedItems();
-      const total = items.reduce((sum, item) => sum + item.price, 0);
-      if (!items.length) {
-        cartWarning.textContent = "Choisissez au moins une option avant de passer commande.";
-        return;
-      }
-      if (total > budget) {
-        cartWarning.textContent = "Choisissez une autre forme de paiement pour compléter la commande.";
-        return;
-      }
-      alert("Commande prête au décollage ✈️");
-    }
+        // Countdown Einaudi
+        function updateCountdown() {
+            const target = new Date("June 30, 2026 20:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown').innerText = `${days} JOURS AVANT LUDOVICO`;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
 
-    checkButton.addEventListener("click", checkPassword);
-    passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
-    security2Input.addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
-    menuChecks.forEach(check => check.addEventListener("change", updateCart));
-    orderButton.addEventListener("click", placeOrder);
-
-    prepareGate();
-    updateCountdown();
-    updateCart();
-    setInterval(updateCountdown, 1000);
-  </script>
+        function sendMessage() {
+            const input = document.getElementById('msg-input');
+            if(!input.value) return;
+            const list = document.getElementById('message-list');
+            const div = document.createElement('div');
+            div.className = 'glass p-4 rounded-2xl border-l-4 border-green-500 italic text-sm animate-fade-in';
+            div.innerText = input.value;
+            list.prepend(div);
+            input.value = "";
+        }
+    </script>
 </body>
 </html>

@@ -3,200 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Privé</title>
+    <title>Betchi.fr - Terminal</title>
     <style>
-        /* --- DESIGN SYSTEM --- */
         :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --primary-color: #2d3436;
-            --accent-color: #6c5ce7;
-            --text-color: #2d3436;
-            --error-color: #ff7675;
-            --transition: all 0.3s ease;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary-text: #f8fafc;
+            --secondary-text: #94a3b8;
+            --accent-color: #38bdf8;
+            --error-color: #fb7185;
+            --border-color: #334155;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            color: var(--primary-text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            line-height: 1.5;
         }
 
-        /* --- LAYOUT --- */
         main {
-            width: 90%;
+            width: 95%;
             max-width: 500px;
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            min-height: 400px;
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            text-align: center;
         }
 
-        section { display: none; animation: fadeIn 0.5s ease forwards; }
+        section { display: none; animation: slideUp 0.4s ease-out; }
         section.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- ELEMENTS --- */
-        h1 { margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center; }
-        p { margin-bottom: 1rem; color: #636e72; }
+        /* --- TYPOGRAPHIE --- */
+        .brand { 
+            font-size: 0.7rem; 
+            letter-spacing: 2px; 
+            color: var(--secondary-text);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-title { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle { 
+            font-size: 0.9rem; 
+            color: var(--accent-color); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .instruction {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-text);
+        }
+
+        /* --- FORMULAIRE --- */
+        .field-group { text-align: left; margin-bottom: 1.5rem; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-size: 0.95rem; 
+            color: var(--secondary-text);
+        }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            border: 1px solid #dfe6e9;
-            border-radius: 8px;
+            padding: 14px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: white;
             font-size: 1rem;
+            transition: all 0.2s;
         }
+
+        input::placeholder { color: #475569; }
+        input:focus { outline: none; border-color: var(--accent-color); }
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 16px;
             background-color: var(--accent-color);
-            color: white;
+            color: #0f172a;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            margin-top: 1rem;
         }
 
-        button:hover { opacity: 0.9; }
-
-        nav {
+        /* --- GRILLE DE NAVIGATION (LES 4 CASES) --- */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
 
-        .nav-btn {
-            background-color: #f1f2f6;
-            color: var(--text-color);
+        .nav-card {
+            background: #0f172a;
+            padding: 25px 10px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .error-msg {
-            color: var(--error-color);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
+        .nav-card:hover { border-color: var(--accent-color); transform: scale(1.02); }
+        
+        .icon-box { font-size: 2rem; margin-bottom: 10px; }
+        .label-box { font-size: 0.8rem; color: var(--secondary-text); text-transform: uppercase; }
 
-        .back-home {
-            margin-top: 1.5rem;
-            background: none;
-            color: var(--accent-color);
-            text-decoration: underline;
-            font-size: 0.9rem;
-        }
+        .error { color: var(--error-color); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+        .back-link { margin-top: 2rem; color: var(--secondary-text); cursor: pointer; display: inline-block; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <main>
     <section id="login" class="active">
-        <h1>Accès Réservé</h1>
-        <p>Veuillez répondre pour entrer.</p>
+        <div class="brand">Betchi.fr</div>
+        <h1 class="main-title">TERMINAL DE LIAISON 🛫</h1>
+        <p class="subtitle">Privé & sécurisé</p>
         
-        <input type="password" id="passwordInput" placeholder="Mot de passe">
-        <p id="errorPass" class="error-msg">Mot de passe incorrect.</p>
+        <div style="height: 1px; background: var(--border-color); margin-bottom: 2rem;"></div>
+        
+        <p class="instruction">Vérifier mon accréditation</p>
 
-        <p><strong>Énigme :</strong> <span id="riddleText"></span></p>
-        <input type="text" id="riddleInput" placeholder="Votre réponse">
-        <p id="errorRiddle" class="error-msg">Réponse à l'énigme incorrecte.</p>
+        <div class="field-group">
+            <label>1. Une personne a très envie de prendre l'avion. Quelle est sa date de naissance ?</label>
+            <input type="text" id="q1" placeholder="ex : 20/02/1989">
+        </div>
 
-        <button onclick="checkAuth()">Entrer</button>
+        <div class="field-group">
+            <label>2. Que hora son ? 🎵</label>
+            <input type="text" id="q2" placeholder="ex : Me gustas tú">
+        </div>
+
+        <p id="errorMsg" class="error">Accréditation refusée. Vérifiez vos réponses.</p>
+        <button onclick="validate()">Pénétrer l'espace aérien</button>
     </section>
 
     <section id="home">
-        <h1>Bienvenue</h1>
-        <p>Heureux de vous revoir. Voici vos rubriques privées :</p>
-        <nav>
-            <button onclick="showPage('page1')">Contenu Un</button>
-            <button onclick="showPage('page2')">Contenu Deux</button>
-            <button onclick="showPage('page3')">Contenu Trois</button>
-        </nav>
+        <div class="brand">Betchi.fr</div>
+        <h1 class="main-title">TABLEAU DE BORD</h1>
+        <p class="subtitle">Accès autorisé</p>
+
+        <div class="nav-grid">
+            <div class="nav-card" onclick="showPage('p1')">
+                <div class="icon-box">📂</div>
+                <div class="label-box">Archives</div>
+            </div>
+            <div class="nav-card" onclick="showPage('p2')">
+                <div class="icon-box">🗺️</div>
+                <div class="label-box">Destinations</div>
+            </div>
+            <div class="nav-card" onclick="showPage('p3')">
+                <div class="icon-box">🔒</div>
+                <div class="label-box">Codes</div>
+            </div>
+            <div class="nav-card" onclick="showPage('p4')">
+                <div class="icon-box">💌</div>
+                <div class="label-box">Messages</div>
+            </div>
+        </div>
     </section>
 
-    <section id="page1">
-        <h1>Contenu Un</h1>
-        <p>Ceci est votre premier espace privé. Modifiez ce texte dans le HTML selon vos besoins.</p>
-        <button class="back-home" onclick="showPage('home')">← Retour</button>
+    <section id="p1">
+        <h1>Archives</h1>
+        <p style="margin: 2rem 0;">[Contenu de la case 1 ici]</p>
+        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
     </section>
 
-    <section id="page2">
-        <h1>Contenu Deux</h1>
-        <p>Ceci est votre deuxième espace privé. Ajoutez des images ou des listes ici.</p>
-        <button class="back-home" onclick="showPage('home')">← Retour</button>
+    <section id="p2">
+        <h1>Destinations</h1>
+        <p style="margin: 2rem 0;">[Contenu de la case 2 ici]</p>
+        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
     </section>
 
-    <section id="page3">
-        <h1>Contenu Trois</h1>
-        <p>Ceci est votre troisième espace privé. Idéal pour des notes ou souvenirs.</p>
-        <button class="back-home" onclick="showPage('home')">← Retour</button>
+    <section id="p3">
+        <h1>Codes</h1>
+        <p style="margin: 2rem 0;">[Contenu de la case 3 ici]</p>
+        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
+    </section>
+
+    <section id="p4">
+        <h1>Messages</h1>
+        <p style="margin: 2rem 0;">[Contenu de la case 4 ici]</p>
+        <span class="back-link" onclick="showPage('home')">Retour au terminal</span>
     </section>
 </main>
 
 <script>
-    /* --- CONFIGURATION (À MODIFIER) --- */
-    const CONFIG = {
-        password: "monmotdepasse",    // Le mot de passe requis
-        riddle: "Quelle est la capitale de la France ?", // L'énoncé de l'énigme
-        answer: "Paris"               // La réponse à l'énigme (insensible à la casse)
+    /* --- CONFIGURATION DES RÉPONSES --- */
+    const AUTH = {
+        answer1: "20/02/1989", // Modifiez la date ici
+        answer2: "Me gustas tú" // Modifiez la réponse ici
     };
 
-    /* --- LOGIQUE --- */
+    function validate() {
+        const r1 = document.getElementById('q1').value.trim();
+        const r2 = document.getElementById('q2').value.trim();
+        const error = document.getElementById('errorMsg');
 
-    // Initialisation de l'énigme
-    document.getElementById('riddleText').innerText = CONFIG.riddle;
-
-    function checkAuth() {
-        const pass = document.getElementById('passwordInput').value;
-        const answer = document.getElementById('riddleInput').value.trim().toLowerCase();
-        
-        let isValid = true;
-
-        // Reset messages
-        document.getElementById('errorPass').style.display = 'none';
-        document.getElementById('errorRiddle').style.display = 'none';
-
-        if (pass !== CONFIG.password) {
-            document.getElementById('errorPass').style.display = 'block';
-            isValid = false;
-        }
-
-        if (answer !== CONFIG.answer.toLowerCase()) {
-            document.getElementById('errorRiddle').style.display = 'block';
-            isValid = false;
-        }
-
-        if (isValid) {
+        // Validation simple (insensible à la casse pour la question 2)
+        if (r1 === AUTH.answer1 && r2.toLowerCase() === AUTH.answer2.toLowerCase()) {
             showPage('home');
+        } else {
+            error.style.display = 'block';
         }
     }
 
-    function showPage(pageId) {
-        // Masquer toutes les sections
-        const sections = document.querySelectorAll('section');
-        sections.forEach(s => s.classList.remove('active'));
-
-        // Afficher la section demandée
-        document.getElementById(pageId).classList.add('active');
-        
-        // Scroll en haut
-        window.scrollTo(0, 0);
+    function showPage(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
     }
 </script>
 

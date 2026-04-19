@@ -1,76 +1,279 @@
-<div id="maintenance-screen" class="hidden w-full max-w-md pb-32 px-2">
-    <button onclick="showSection('home')" class="mb-8 text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">← Retour Terminal</button>
-    
-    <div class="terminal-header text-[10px] mb-8">
-        ORDRE DE MAINTENANCE TECHNIQUE<br>UNITÉ DE SOINS ET PLAISIRS
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BETCHI.FR | Terminal de Liaison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Gaegu:wght@400;700&family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root { --sky-bg: #f0f4f8; --airport-dark: #1a1a1a; --accent-orange: #ff9d00; }
+        body { 
+            background-color: var(--sky-bg); 
+            color: #2c3e50; 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .naif { font-family: 'Gaegu', cursive; }
+        
+        /* WALLPAPER D'ICONES FIXES */
+        .wallpaper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2; opacity: 0.12;
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            padding: 20px; gap: 40px; pointer-events: none;
+        }
+        .icon-static { font-size: 1.8rem; display: flex; justify-content: center; align-items: center; }
+
+        /* TRAJECTOIRE COEUR ET AVION */
+        .sky-svg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+        }
+        .heart-path {
+            fill: none;
+            stroke: rgba(127, 179, 213, 0.4);
+            stroke-width: 3;
+            stroke-dasharray: 8, 12;
+            stroke-linecap: round;
+        }
+        .plane-on-path { 
+            offset-path: path('M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300'); 
+            animation: followPath 18s linear infinite; 
+            font-size: 2.2rem; 
+            position: absolute; 
+        }
+        @keyframes followPath { 0% { offset-distance: 0%; transform: rotate(0deg); } 100% { offset-distance: 100%; } }
+
+        /* TITRE TERMINAL STYLE LED AEROPORT */
+        .terminal-header {
+            font-family: 'JetBrains Mono', monospace;
+            background: #222; color: var(--accent-orange);
+            padding: 12px 24px; border-radius: 8px;
+            text-transform: uppercase; border: 3px solid #333;
+            box-shadow: inset 0 0 15px rgba(255,157,0,0.15);
+            display: inline-block;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* FLAPS FIXES (S'ANIMENT UNIQUEMENT AU SUCCÈS) */
+        .flap-board { display: flex; gap: 10px; justify-content: center; }
+        .flap {
+            width: 55px; height: 80px; background: #222; border-radius: 6px;
+            color: #eee; font-size: 2.5rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; border: 1px solid #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .flap::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #000; }
+        .spinning { animation: flap-flip 0.15s infinite; }
+        @keyframes flap-flip { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(-90deg); } 100% { transform: rotateX(0deg); } }
+
+        .glass { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,0.6); 
+            border-radius: 2.8rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center min-h-screen">
+
+    <div class="wallpaper">
+        <div class="icon-static">☀️</div><div class="icon-static">🎵</div><div class="icon-static">🌮</div><div class="icon-static">🍹</div><div class="icon-static">🥾</div>
+        <div class="icon-static">🔥</div><div class="icon-static">🍆</div><div class="icon-static">❤️</div><div class="icon-static">✨</div><div class="icon-static">☀️</div>
+        <div class="icon-static">🎵</div><div class="icon-static">🌮</div><div class="icon-static">🍹</div><div class="icon-static">🥾</div><div class="icon-static">🔥</div>
     </div>
-    
-    <div class="space-y-3">
-        <div class="bg-white/60 p-6 rounded-[1.8rem] flex justify-between items-center border-2 border-red-100/50">
-            <div class="pr-4">
-                <p class="text-sm font-bold text-red-400 uppercase italic">FORFAIT BIG LOVE</p>
-                <p class="text-[10px] text-red-300 mt-1">Indisponible - Maintenance technique lourde</p>
+
+    <svg class="sky-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+        <path id="heartPath" class="heart-path" d="M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300" />
+    </svg>
+    <div class="plane-on-path">✈️</div>
+
+    <div id="login-screen" class="w-full max-w-md mt-10 space-y-8">
+        <div class="text-center">
+            <div class="terminal-header text-[10px] sm:text-xs tracking-tighter">
+                TERMINAL DE LIAISON BETCHI.FR<br>ESPACE AÉRIEN SÉCURISÉ ET PRIVÉ
             </div>
-            <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center text-xs">⚠️</div>
         </div>
 
-        <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
-            <div><p class="text-sm font-bold text-slate-700">30 min de papouilles (Cheveux)</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 3 BC</p></div>
-            <input type="checkbox" class="w-6 h-6 rounded-lg accent-sky-400">
-        </div>
-        
-        <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
-            <div><p class="text-sm font-bold text-slate-700">Le meilleur porc au caramel</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 6 BC</p></div>
-            <input type="checkbox" class="w-6 h-6 rounded-lg accent-sky-400">
-        </div>
+        <div class="glass p-8 space-y-8 shadow-2xl">
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 mb-2 uppercase italic">
+                        Une personne a vraiment très envie de PRENDRE l'avion. Quelle est sa date de naissance ?
+                    </label>
+                    <input type="text" id="birthday" placeholder="ex : 20/02/89" class="w-full bg-white/60 border-none rounded-2xl p-5 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300">
+                </div>
+                <div>
+                    <div class="flex items-center mb-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase italic mr-2">¿Que hora son?</label>
+                        <span class="text-sm">🎵</span>
+                    </div>
+                    <input type="text" id="joke" placeholder="Demander à Manu Chao" class="w-full bg-white/60 border-none rounded-2xl p-5 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300">
+                </div>
+            </div>
 
-        <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
-            <div><p class="text-sm font-bold text-slate-700">Apprendre le créole ensemble</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 4 BC</p></div>
-            <input type="checkbox" class="w-6 h-6 rounded-lg accent-sky-400">
-        </div>
+            <div class="flap-board">
+                <div class="flap" id="f1">?</div>
+                <div class="flap" id="f2">?</div>
+                <div class="flap" id="f3">?</div>
+                <div class="flap" id="f4">?</div>
+            </div>
 
-        <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
-            <div><p class="text-sm font-bold text-slate-700">Savoir si tu me manques (Confirmation)</p><p class="text-[10px] text-emerald-400 uppercase font-bold">Inclus</p></div>
-            <input type="checkbox" checked disabled class="w-6 h-6 rounded-lg accent-emerald-400">
-        </div>
-
-        <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
-            <div><p class="text-sm font-bold text-slate-700">Inspection visuelle du fuselage</p><p class="text-[10px] text-red-400 uppercase font-bold">- 1000 BC</p></div>
-            <input type="checkbox" class="w-6 h-6 rounded-lg accent-red-400">
-        </div>
-
-        <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
-            <div><p class="text-sm font-bold text-slate-700">Session rando / cocktail</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 5 BC</p></div>
-            <input type="checkbox" class="w-6 h-6 rounded-lg accent-sky-400">
+            <button id="login-btn" onclick="attemptLogin()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-xl tracking-widest text-sm uppercase active:scale-95 transition-all">Vérification passager</button>
         </div>
     </div>
 
-    <div class="mt-8 glass p-8 space-y-6">
-        <div>
-            <label class="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Date d'intervention souhaitée</label>
-            <input type="date" class="w-full bg-white/50 border-none rounded-2xl p-4 mt-2 text-sm outline-none ring-1 ring-slate-100">
-        </div>
-        
-        <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Notes de vol (Précisions)</label>
-            <textarea placeholder="Une chose oubliée ? Éclairez-nous..." class="w-full bg-white/50 border-none rounded-2xl p-5 text-sm outline-none ring-1 ring-slate-100 h-24"></textarea>
-        </div>
-        
-        <div class="pt-4 border-t border-slate-100">
-            <div class="bg-slate-50 p-4 rounded-2xl mb-4 text-center border border-slate-100">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Contrat de Liaison</p>
-                <p class="text-lg font-black text-slate-800">1 OFFRE UNIQUE</p>
-                <p class="text-xl font-bold text-sky-500">Paiement Annuel</p>
-                <p class="text-[10px] text-slate-400 italic mt-1">Aucun format libre, prix fixe</p>
+    <div id="home-screen" class="hidden w-full max-w-md mt-6">
+        <header class="mb-10 px-2 flex justify-between items-start">
+            <div>
+                <p id="current-date" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"></p>
+                <p class="text-4xl font-black text-slate-800 mt-1">22°C <span class="text-xl font-normal opacity-40">☀️</span></p>
+                <p class="mt-3 text-lg italic text-slate-500 naif">"Idéal pour partager un melon à la plage"</p>
             </div>
-            
-            <button class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl active:scale-95 transition-all">
-                CONFIRMER LA COMMANDE
+            <div class="bg-white px-5 py-3 rounded-[1.5rem] shadow-sm text-right">
+                <p class="text-[9px] uppercase font-black text-slate-300">Betchi-Credits</p>
+                <p class="text-xl font-bold text-sky-500">2002 <span class="text-[10px] text-slate-400">BC</span></p>
+            </div>
+        </header>
+
+        <nav class="space-y-4">
+            <button onclick="showSection('maintenance')" class="w-full flex justify-between items-center bg-white p-7 rounded-[2.2rem] shadow-sm active:bg-slate-50 border border-white">
+                <span class="font-bold text-slate-700">1. Entretien de l'appareil</span>
+                <span class="text-xl opacity-40">🛠️</span>
             </button>
+            <button onclick="showSection('departs')" class="w-full flex justify-between items-center bg-white p-7 rounded-[2.2rem] shadow-sm active:bg-slate-50 border border-white">
+                <span class="font-bold text-slate-700">2. Plan de vol</span>
+                <span class="text-xl opacity-40">✈️</span>
+            </button>
+        </nav>
+    </div>
+
+    <div id="maintenance-screen" class="hidden w-full max-w-md pb-32 px-2">
+        <button onclick="showSection('home')" class="mb-8 text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">← Retour Terminal</button>
+        
+        <div class="terminal-header text-[10px] mb-8 w-full">
+            ORDRE DE MAINTENANCE TECHNIQUE<br>UNITÉ DE SOINS ET PLAISIRS
+        </div>
+        
+        <div class="space-y-3">
+            <div class="bg-white/60 p-6 rounded-[1.8rem] flex justify-between items-center border-2 border-red-100/50">
+                <div class="pr-4">
+                    <p class="text-sm font-bold text-red-400 uppercase italic">FORFAIT BIG LOVE</p>
+                    <p class="text-[10px] text-red-300 mt-1 leading-tight">Indisponible - En maintenance technique lourde</p>
+                </div>
+                <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center text-xs">⚠️</div>
+            </div>
+
+            <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
+                <div><p class="text-sm font-bold text-slate-700">Papouilles (Option Cheveux)</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 3 BC</p></div>
+                <input type="checkbox" class="w-6 h-6 accent-sky-400">
+            </div>
+            <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
+                <div><p class="text-sm font-bold text-slate-700">Ravitaillement : Porc au caramel</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 6 BC</p></div>
+                <input type="checkbox" class="w-6 h-6 accent-sky-400">
+            </div>
+            <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
+                <div><p class="text-sm font-bold text-slate-700">Module : Apprendre le créole</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 4 BC</p></div>
+                <input type="checkbox" class="w-6 h-6 accent-sky-400">
+            </div>
+            <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
+                <div><p class="text-sm font-bold text-slate-700">Savoir si tu me manques</p><p class="text-[10px] text-emerald-400 uppercase font-bold">Inclus</p></div>
+                <input type="checkbox" checked disabled class="w-6 h-6 accent-emerald-400">
+            </div>
+            <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
+                <div><p class="text-sm font-bold text-slate-700">Sortie : Rando & Cocktails</p><p class="text-[10px] text-sky-400 uppercase font-bold">+ 5 BC</p></div>
+                <input type="checkbox" class="w-6 h-6 accent-sky-400">
+            </div>
+            <div class="bg-white p-6 rounded-[1.8rem] flex justify-between items-center shadow-sm">
+                <div><p class="text-sm font-bold text-slate-700">Maintenance du fuselage</p><p class="text-[10px] text-red-400 uppercase font-bold">- 1000 BC</p></div>
+                <input type="checkbox" class="w-6 h-6 accent-red-400">
+            </div>
+        </div>
+
+        <div class="mt-8 glass p-8 space-y-6">
+            <div>
+                <label class="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Date d'intervention</label>
+                <input type="date" class="w-full bg-white border-none rounded-2xl p-4 mt-2 text-sm outline-none ring-1 ring-slate-100">
+            </div>
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Notes de vol</label>
+                <textarea placeholder="Une chose oubliée ? Éclairez-nous..." class="w-full bg-white border-none rounded-2xl p-5 text-sm outline-none ring-1 ring-slate-100 h-24"></textarea>
+            </div>
             
-            <p class="text-[9px] text-slate-400 text-center mt-4 uppercase">
-                Possibilité de payer 4x en nature sans frais additionnels
-            </p>
+            <div class="pt-4 border-t border-slate-100">
+                <div class="bg-slate-50 p-4 rounded-2xl mb-4 text-center border border-slate-100">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Contrat de Liaison</p>
+                    <p class="text-lg font-black text-slate-800 uppercase">1 Offre Unique</p>
+                    <p class="text-xl font-bold text-sky-500">Paiement Annuel</p>
+                    <p class="text-[10px] text-slate-400 italic mt-1">Prix fixe / Aucun format libre</p>
+                </div>
+                <button class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">CONFIRMER LA COMMANDE</button>
+                <p class="text-[9px] text-slate-400 text-center mt-4 uppercase">Possibilité de payer 4x en nature sans frais additionnels</p>
+            </div>
         </div>
     </div>
-</div>
+
+    <div id="departs-screen" class="hidden w-full max-w-md pb-32 px-2">
+        <button onclick="showSection('home')" class="mb-8 text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">← Retour Terminal</button>
+        <h2 class="text-3xl font-black text-slate-800 mb-2">PLAN DE VOL</h2>
+        <div class="mt-10 glass p-7 border-l-4 border-sky-400">
+            <p class="text-[10px] font-bold text-sky-400 uppercase mb-2 tracking-widest">PROCHAINE ESCALE</p>
+            <p class="text-xl font-bold text-slate-700 mb-1 uppercase">Ludovico Einaudi</p>
+            <p class="text-3xl font-black text-slate-800 naif">J - 72 JOURS</p>
+        </div>
+    </div>
+
+    <script>
+        function attemptLogin() {
+            const bday = document.getElementById('birthday').value;
+            const joke = document.getElementById('joke').value.toLowerCase();
+            const btn = document.getElementById('login-btn');
+            
+            if(bday.includes("16/05") && (joke.includes("mi corazon") || joke.includes("corazon"))) {
+                btn.innerText = "ACCÈS VALIDÉ";
+                btn.style.backgroundColor = "#10b981";
+
+                const result = ['O', 'K', 'A', 'Y'];
+                [1,2,3,4].forEach((id, i) => {
+                    const flap = document.getElementById('f' + id);
+                    flap.classList.add('spinning');
+                    setTimeout(() => {
+                        flap.classList.remove('spinning');
+                        flap.innerText = result[i];
+                        flap.style.color = "#10b981";
+                    }, i * 400 + 800);
+                });
+                
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('home-screen').classList.remove('hidden');
+                }, 3500);
+            } else {
+                btn.innerText = "ACCÈS REFUSÉ";
+                btn.style.backgroundColor = "#ef4444";
+                setTimeout(() => { btn.innerText = "Vérification passager"; btn.style.backgroundColor = "#0f172a"; }, 1500);
+            }
+        }
+
+        function showSection(section) {
+            ['login', 'home', 'maintenance', 'departs'].forEach(s => {
+                const el = document.getElementById(s + '-screen');
+                if(el) el.classList.add('hidden');
+            });
+            document.getElementById(section + '-screen').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('fr-FR', options);
+    </script>
+</body>
+</html>

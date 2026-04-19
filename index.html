@@ -5,156 +5,330 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BETCHI.FR | Terminal de Liaison</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Gaegu:wght@400;700&family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Gaegu:wght@400;700&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --sky-bg: #f0f4f8; --airport-dark: #1a1a1a; }
-        body { 
-            background-color: var(--sky-bg); 
-            color: #2c3e50; 
-            font-family: 'Inter', sans-serif; 
+        :root {
+            --sky-bg: #eef4f8;
+            --airport-dark: #1b1f24;
+            --airport-panel: rgba(255, 255, 255, 0.82);
+            --accent: #0ea5e9;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--sky-bg);
+            color: #334155;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             margin: 0;
         }
-        .naif { font-family: 'Gaegu', cursive; }
-        
-        /* WALLPAPER FIXE */
-        .wallpaper {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2; opacity: 0.15;
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            padding: 20px; gap: 40px; pointer-events: none;
-        }
-        .icon-static { font-size: 2rem; display: flex; justify-content: center; align-items: center; }
 
-        /* TRAJECTOIRE COEUR ET AVION */
-        .sky-svg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none;
+        .naif { font-family: 'Gaegu', cursive; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .wallpaper {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.2;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 16px;
+            gap: 24px;
+            pointer-events: none;
         }
+
+        .icon-static {
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: grayscale(0.15);
+        }
+
+        .sky-svg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         .heart-path {
             fill: none;
-            stroke: rgba(127, 179, 213, 0.4);
-            stroke-width: 3;
-            stroke-dasharray: 8, 12;
+            stroke: rgba(14, 165, 233, 0.3);
+            stroke-width: 2.4;
+            stroke-dasharray: 7, 10;
             stroke-linecap: round;
         }
-        .plane-on-path { offset-path: path('M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300'); animation: followPath 15s linear infinite; font-size: 2.5rem; position: absolute; }
-        @keyframes followPath { 0% { offset-distance: 0%; transform: rotate(0deg); } 100% { offset-distance: 100%; } }
 
-        /* TITRE TERMINAL STYLE AEROPORT */
+        .plane-on-path {
+            offset-path: path('M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300');
+            animation: followPath 18s linear infinite;
+            font-size: 2rem;
+            position: absolute;
+            opacity: 0.95;
+        }
+
+        @keyframes followPath {
+            0% { offset-distance: 0%; transform: rotate(0deg); }
+            100% { offset-distance: 100%; }
+        }
+
         .terminal-header {
             font-family: 'JetBrains Mono', monospace;
-            background: #222; color: #ff9d00;
-            padding: 10px 20px; border-radius: 8px;
-            text-transform: uppercase; border: 3px solid #333;
-            box-shadow: inset 0 0 10px rgba(255,157,0,0.2);
+            background: var(--airport-dark);
+            color: #f59e0b;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            border: 2px solid #2d343f;
+            box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.2);
             display: inline-block;
         }
 
-        /* FLAPS FIXES */
-        .flap-board { display: flex; gap: 10px; justify-content: center; }
-        .flap {
-            width: 55px; height: 80px; background: #222; border-radius: 6px;
-            color: #eee; font-size: 2.5rem; font-weight: 800;
-            display: flex; align-items: center; justify-content: center;
-            position: relative; border: 1px solid #000;
+        .glass {
+            background: var(--airport-panel);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 2.2rem;
         }
-        .flap::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #000; }
-        .spinning { animation: flap-flip 0.15s infinite; }
-        @keyframes flap-flip { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(-90deg); } 100% { transform: rotateX(0deg); } }
 
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); border-radius: 3rem; }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .tab-btn {
+            border: 1px solid #cbd5e1;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: all 160ms ease;
+            color: #334155;
+            background: white;
+        }
+
+        .tab-btn.active {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: white;
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .card {
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            padding: 0.9rem;
+            background: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center min-h-screen">
 
-    <div class="wallpaper">
-        <div class="icon-static">☀️</div><div class="icon-static">🎵</div><div class="icon-static">🌮</div><div class="icon-static">🍹</div><div class="icon-static">🥾</div>
-        <div class="icon-static">🔥</div><div class="icon-static">🍆</div><div class="icon-static">❤️</div><div class="icon-static">✨</div><div class="icon-static">☀️</div>
+    <div class="wallpaper" aria-hidden="true">
+        <div class="icon-static">✈️</div><div class="icon-static">🧳</div><div class="icon-static">🎧</div><div class="icon-static">🌤️</div><div class="icon-static">🛂</div>
+        <div class="icon-static">🗺️</div><div class="icon-static">🧃</div><div class="icon-static">❤️</div><div class="icon-static">🛬</div><div class="icon-static">☀️</div>
     </div>
 
-    <svg class="sky-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
-        <path id="heartPath" class="heart-path" d="M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300" />
+    <svg class="sky-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path class="heart-path" d="M 500 300 C 500 150 250 150 250 350 C 250 550 500 750 500 750 C 500 750 750 550 750 350 C 750 150 500 150 500 300" />
     </svg>
-    <div class="plane-on-path">✈️</div>
+    <div class="plane-on-path" aria-hidden="true">🛫</div>
 
-    <div id="login-screen" class="w-full max-w-md mt-10 space-y-8">
-        <div class="text-center">
-            <div class="terminal-header text-[10px] sm:text-xs tracking-tighter">
-                TERMINAL DE LIAISON BETCHI.FR<br>ESPACE AÉRIEN SÉCURISÉ ET PRIVÉ
-            </div>
-        </div>
-
-        <div class="glass p-8 space-y-8 shadow-2xl">
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 mb-2 uppercase italic">
-                        Une personne a vraiment très envie de PRENDRE l'avion. Quelle est sa date de naissance ?
-                    </label>
-                    <input type="text" id="birthday" placeholder="ex : 20/02/89" class="w-full bg-white/50 border-none rounded-2xl p-5 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300">
+    <main class="w-full max-w-md mt-8 sm:mt-10">
+        <section id="login-screen" class="space-y-7">
+            <div class="text-center">
+                <div class="terminal-header text-[10px] sm:text-xs tracking-tight">
+                    TERMINAL DE LIAISON BETCHI.FR<br>
+                    Validation sécurité passagers privés
                 </div>
-                <div>
-                    <div class="flex items-center mb-2">
-                        <label class="block text-[11px] font-bold text-slate-500 uppercase italic mr-2">¿Que hora son?</label>
-                        <span>🎵</span>
+            </div>
+
+            <div class="glass p-7 sm:p-8 space-y-6 shadow-2xl">
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    <span class="status-dot bg-emerald-500"></span>
+                    Contrôle d'accès local pour 2 personnes. Aucune donnée n'est envoyée côté serveur.
+                </p>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 mb-2 uppercase italic">Date de naissance passager #1</label>
+                        <input
+                            type="text"
+                            id="birthday"
+                            placeholder="ex : 16/05"
+                            autocomplete="off"
+                            class="w-full bg-white/70 border-none rounded-2xl p-4 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300"
+                        >
                     </div>
-                    <input type="text" id="joke" placeholder="Demander à Manu Chao" class="w-full bg-white/50 border-none rounded-2xl p-5 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300">
+                    <div>
+                        <div class="flex items-center mb-2">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase italic mr-2">Mot de passe musical</label>
+                            <span>🎵</span>
+                        </div>
+                        <input
+                            type="text"
+                            id="joke"
+                            placeholder="Indice : Manu Chao"
+                            autocomplete="off"
+                            class="w-full bg-white/70 border-none rounded-2xl p-4 text-slate-700 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-300"
+                        >
+                    </div>
+                </div>
+
+                <p id="attempts-label" class="text-[11px] text-slate-500 mono">Essais restants: 5</p>
+
+                <button
+                    id="login-btn"
+                    onclick="attemptLogin()"
+                    class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl shadow-xl tracking-widest text-sm uppercase active:scale-95 transition-all"
+                >
+                    Validation sécurité
+                </button>
+            </div>
+        </section>
+
+        <section id="home-screen" class="hidden space-y-4">
+            <div class="glass p-7 text-center shadow-2xl">
+                <h1 class="text-3xl font-black text-slate-800 mb-2">Bienvenue à bord</h1>
+                <p class="naif text-2xl text-sky-700 italic">"Petit terminal privé, gros sourire cabine."</p>
+            </div>
+
+            <div class="glass p-4 sm:p-5 shadow-2xl space-y-4">
+                <div class="flex flex-wrap gap-2 justify-center" role="tablist" aria-label="Navigation privée">
+                    <button class="tab-btn active" data-tab="tab-vol">Vol</button>
+                    <button class="tab-btn" data-tab="tab-carnet">Carnet</button>
+                    <button class="tab-btn" data-tab="tab-charte">Charte</button>
+                </div>
+
+                <div id="tab-vol" class="tab-panel active space-y-3">
+                    <div class="card">
+                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-1">Statut terminal</p>
+                        <p class="text-sm text-slate-700">Passagers validés ✅ · Embarquement détente en cours.</p>
+                    </div>
+                    <div class="card">
+                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-1">Prochaines missions</p>
+                        <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1">
+                            <li>Week-end plage + melon.</li>
+                            <li>Playlist décollage et sunset.</li>
+                            <li>Check valises cabine light.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tab-carnet" class="tab-panel space-y-3">
+                    <div class="card">
+                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-1">Rappels express</p>
+                        <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1">
+                            <li>Passeports et billets au même endroit.</li>
+                            <li>Chargeurs + écouteurs dans la poche avant.</li>
+                            <li>Message “bien arrivé” dès l’atterrissage.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tab-charte" class="tab-panel space-y-3">
+                    <div class="card">
+                        <p class="text-[11px] uppercase font-bold text-slate-500 mb-2">Charte aéroport (légère)</p>
+                        <ul class="text-sm text-slate-700 list-disc ml-5 space-y-1">
+                            <li><strong>Icônes:</strong> max 1 emoji par ligne d’info, style voyage uniquement (✈️, 🧳, 🛂, 🛬).</li>
+                            <li><strong>Typo principale:</strong> Inter (lisibilité).</li>
+                            <li><strong>Typo signalétique:</strong> JetBrains Mono pour labels et statuts.</li>
+                            <li><strong>Typo mood:</strong> Gaegu seulement pour une phrase signature.</li>
+                            <li><strong>Palette:</strong> base ardoise + accent ciel (sobre, pas de néon).</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-
-            <div class="flap-board">
-                <div class="flap" id="f1">?</div>
-                <div class="flap" id="f2">?</div>
-                <div class="flap" id="f3">?</div>
-                <div class="flap" id="f4">?</div>
-            </div>
-
-            <button id="login-btn" onclick="attemptLogin()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-xl tracking-widest text-sm uppercase active:scale-95 transition-all">Vérification passager</button>
-        </div>
-    </div>
-
-    <div id="home-screen" class="hidden w-full max-w-md mt-10">
-        <div class="glass p-8 text-center">
-            <h1 class="text-3xl font-black text-slate-800 mb-4">BIENVENUE À BORD</h1>
-            <p class="naif text-2xl text-sky-600 italic">"Idéal pour partager un melon à la plage"</p>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script>
-        function attemptLogin() {
-            const bday = document.getElementById('birthday').value;
-            const joke = document.getElementById('joke').value.toLowerCase();
-            const btn = document.getElementById('login-btn');
-            
-            if(bday.includes("16/05") && (joke.includes("mi corazon") || joke.includes("corazon"))) {
-                btn.innerText = "IDENTITÉ CONFIRMÉE";
-                btn.style.backgroundColor = "#10b981";
+        let attemptsLeft = 5;
 
-                // Lancement de l'animation des flaps au succès
-                const result = ['O', 'K', 'A', 'Y'];
-                [1,2,3,4].forEach((id, i) => {
-                    const flap = document.getElementById(`f${id}`);
-                    flap.classList.add('spinning');
-                    setTimeout(() => {
-                        flap.classList.remove('spinning');
-                        flap.innerText = result[i];
-                        flap.style.color = "#10b981";
-                    }, i * 400 + 1000);
-                });
-                
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('home-screen').classList.remove('hidden');
-                }, 4000);
-            } else {
-                btn.innerText = "ERREUR DE SÉCURITÉ";
-                btn.style.backgroundColor = "#ef4444";
-                setTimeout(() => {
-                    btn.innerText = "Vérification passager";
-                    btn.style.backgroundColor = "#0f172a";
-                }, 1500);
-            }
+        function normalize(value) {
+            return value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
         }
+
+        function updateAttemptsLabel() {
+            const label = document.getElementById('attempts-label');
+            label.textContent = `Essais restants: ${attemptsLeft}`;
+            label.style.color = attemptsLeft <= 2 ? '#ef4444' : '#64748b';
+        }
+
+        function unlockHome() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('home-screen').classList.remove('hidden');
+        }
+
+        function attemptLogin() {
+            const bday = normalize(document.getElementById('birthday').value);
+            const secret = normalize(document.getElementById('joke').value);
+            const btn = document.getElementById('login-btn');
+
+            const bdayOk = bday.includes('16/05') || bday.includes('16-05');
+            const secretOk = secret.includes('mi corazon') || secret.includes('corazon');
+
+            if (bdayOk && secretOk) {
+                btn.innerText = 'Identité confirmée';
+                btn.style.backgroundColor = '#10b981';
+                setTimeout(unlockHome, 700);
+                return;
+            }
+
+            attemptsLeft = Math.max(0, attemptsLeft - 1);
+            updateAttemptsLabel();
+
+            btn.innerText = 'Erreur de sécurité';
+            btn.style.backgroundColor = '#ef4444';
+
+            if (attemptsLeft === 0) {
+                btn.innerText = 'Terminal verrouillé';
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed');
+                return;
+            }
+
+            setTimeout(() => {
+                btn.innerText = 'Validation sécurité';
+                btn.style.backgroundColor = '#0f172a';
+            }, 1200);
+        }
+
+        function initTabs() {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.tab-panel');
+
+            buttons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const target = button.dataset.tab;
+
+                    buttons.forEach((btn) => btn.classList.remove('active'));
+                    panels.forEach((panel) => panel.classList.remove('active'));
+
+                    button.classList.add('active');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+        }
+
+        updateAttemptsLabel();
+        initTabs();
     </script>
 </body>
 </html>

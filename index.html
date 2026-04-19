@@ -3,144 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betchi.fr - Terminal de Liaison</title>
+    <title>Betchi.fr - Terminal</title>
     <style>
         :root {
-            --bg-color: #0b0f1a;
-            --card-bg: #161e2d;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
-            --accent: #38bdf8;
-            --error: #f87171;
-            --border: #2d3748;
+            --bg: #0b0f1a;
+            --card: #161e2d;
+            --blue: #38bdf8;
+            --text: #ffffff;
+            --dim: #94a3b8;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            margin: 0;
             padding: 20px;
         }
-
         main {
             width: 100%;
-            max-width: 450px;
-            background: var(--card-bg);
+            max-width: 420px;
+            background: var(--card);
             padding: 40px 25px;
             border-radius: 24px;
-            border: 1px solid var(--border);
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid #2d3748;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-
         section { display: none; }
-        section.active { display: block; animation: fadeIn 0.5s ease; }
+        section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .brand { font-size: 10px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; display: block; margin-bottom: 25px; }
+        .departure-icon { font-size: 50px; margin-bottom: 10px; display: block; }
+        h1 { font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+        .subtitle { font-size: 11px; color: var(--blue); letter-spacing: 2px; margin-bottom: 35px; text-transform: uppercase; }
 
-        /* --- ENTÊTE --- */
-        .brand { 
-            font-size: 0.65rem; 
-            letter-spacing: 3px; 
-            color: var(--text-dim);
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            display: block;
-        }
-
-        .departure-icon {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            display: block;
-            color: var(--accent);
-        }
-
-        .main-title { 
-            font-size: 1.8rem; 
-            font-weight: 300; 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .subtitle { 
-            font-size: 0.8rem; 
-            color: var(--accent); 
-            text-transform: uppercase; 
-            letter-spacing: 3px;
-            margin-bottom: 40px;
-        }
-
-        /* --- FORMULAIRE --- */
-        .field-group { text-align: left; margin-bottom: 20px; }
+        .field { text-align: left; margin-bottom: 20px; }
+        label { font-size: 13px; color: var(--dim); display: block; margin-bottom: 8px; line-height: 1.4; }
+        input { width: 100%; padding: 14px; background: #0b0f1a; border: 1px solid #2d3748; color: white; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 16px; background: var(--blue); color: #0b0f1a; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-size: 14px; }
         
-        label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-size: 0.85rem; 
-            color: var(--text-dim);
-            line-height: 1.4;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            background: #0b0f1a;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        input:focus { border-color: var(--accent); }
-
-        button {
-            width: 100%;
-            padding: 18px;
-            background-color: var(--accent);
-            color: #0b0f1a;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-top: 15px;
-            transition: 0.2s;
-        }
-
-        button:active { transform: scale(0.98); }
-
-        /* --- GRILLE --- */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .nav-card {
-            background: #0b0f1a;
-            padding: 30px 10px;
-            border-radius: 18px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .nav-card:hover { border-color: var(--accent); background: #161e2d; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .card { background: #0b0f1a; padding: 25px 10px; border-radius: 18px; border: 1px solid #2d3748; cursor: pointer; transition: 0.2s; }
+        .card:active { transform: scale(0.95); }
+        .card-icon { font-size: 32px; display: block; margin-bottom: 8px; }
+        .card-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
         
-        .icon-box { font-size: 2.2rem; margin-bottom: 10px; }
-        .label-box { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-
-        .error { color: var(--error); font-size: 0.85rem; margin-top: 15px; display: none; }
-        .back-link { margin-top: 30px; color: var(--text-dim); cursor: pointer; display: inline-block; font-size: 0.9rem; text-decoration: underline; }
+        .err { color: #f87171; font-size: 13px; margin-top: 15px; display: none; }
+        .back { margin-top: 30px; display: inline-block; color: var(--dim); text-decoration: underline; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -149,88 +63,59 @@
     <section id="login" class="active">
         <span class="brand">Betchi.fr</span>
         <span class="departure-icon">🛫</span>
-        <h1 class="main-title">Terminal de liaison</h1>
+        <h1>Terminal de liaison</h1>
         <p class="subtitle">Privé & sécurisé</p>
         
-        <p style="font-size: 1rem; margin-bottom: 25px; color: var(--text-main);">Vérifier mon accréditation</p>
-
-        <div class="field-group">
+        <div class="field">
             <label>1. Une personne a très envie de prendre l'avion. Quelle est sa date de naissance ?</label>
             <input type="text" id="q1" placeholder="ex : 20/02/1989">
         </div>
-
-        <div class="field-group">
+        <div class="field">
             <label>2. Que hora son ? 🎵</label>
             <input type="text" id="q2" placeholder="ex : Me gustas tú">
         </div>
-
-        <p id="errorMsg" class="error">Accréditation refusée.</p>
-        <button onclick="validate()">Pénétrer l'espace aérien</button>
+        <p id="errorMsg" class="err">Accréditation refusée.</p>
+        <button onclick="check()">Pénétrer l'espace aérien</button>
     </section>
 
     <section id="home">
         <span class="brand">Betchi.fr</span>
-        <h1 class="main-title">Tableau de Bord</h1>
+        <h1>Tableau de Bord</h1>
         <p class="subtitle">Accès Autorisé</p>
-
-        <div class="nav-grid">
-            <div class="nav-card" onclick="showPage('p1')">
-                <div class="icon-box">✈️</div>
-                <div class="label-box">Avion</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p2')">
-                <div class="icon-box">☀️</div>
-                <div class="label-box">Soleil</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p3')">
-                <div class="icon-box">💣</div>
-                <div class="label-box">Bombe</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p4')">
-                <div class="icon-box">❤️</div>
-                <div class="label-box">Coeur</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p5')">
-                <div class="icon-box">🍷</div>
-                <div class="label-box">Vin</div>
-            </div>
-            <div class="nav-card" onclick="showPage('p6')">
-                <div class="icon-box">🌮</div>
-                <div class="label-box">Tacos</div>
-            </div>
+        <div class="grid">
+            <div class="card" onclick="go('p1')"><span class="card-icon">✈️</span><span class="card-label">Avion</span></div>
+            <div class="card" onclick="go('p2')"><span class="card-icon">☀️</span><span class="card-label">Soleil</span></div>
+            <div class="card" onclick="go('p3')"><span class="card-icon">💣</span><span class="card-label">Bombe</span></div>
+            <div class="card" onclick="go('p4')"><span class="card-icon">❤️</span><span class="card-label">Coeur</span></div>
+            <div class="card" onclick="go('p5')"><span class="card-icon">🍷</span><span class="card-label">Vin</span></div>
+            <div class="card" onclick="go('p6')"><span class="card-icon">🌮</span><span class="card-label">Tacos</span></div>
         </div>
     </section>
 
-    <section id="p1"><h1>Espace Avion</h1><span class="back-link" onclick="showPage('home')">Retour</span></section>
-    <section id="p2"><h1>Espace Soleil</h1><span class="back-link" onclick="showPage('home')">Retour</span></section>
-    <section id="p3"><h1>Espace Bombe</h1><span class="back-link" onclick="showPage('home')">Retour</span></section>
-    <section id="p4"><h1>Espace Coeur</h1><span class="back-link" onclick="showPage('home')">Retour</span></section>
-    <section id="p5"><h1>Espace Vin</h1><span class="back-link" onclick="showPage('home')">Retour</span></section>
-    <section id="p6"><h1>Espace Tacos</h1><span class="back-link" onclick="showPage('home')">Retour</span></section>
+    <section id="p1"><h1>Espace Avion</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
+    <section id="p2"><h1>Espace Soleil</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
+    <section id="p3"><h1>Espace Bombe</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
+    <section id="p4"><h1>Espace Coeur</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
+    <section id="p5"><h1>Espace Vin</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
+    <section id="p6"><h1>Espace Tacos</h1><p style="margin-top:20px">Contenu à venir...</p><div class="back" onclick="go('home')">Retour au tableau de bord</div></section>
 </main>
 
 <script>
-    const AUTH = {
-        ans1: "16/05/1988",
-        ans2: "mi corazon"
-    };
-
-    function validate() {
+    function check() {
         const r1 = document.getElementById('q1').value.trim();
         const r2 = document.getElementById('q2').value.trim().toLowerCase();
-        const err = document.getElementById('errorMsg');
-
-        if (r1 === AUTH.ans1 && r2 === AUTH.ans2) {
-            showPage('home');
+        
+        // Réponses exactes
+        if (r1 === "16/05/1988" && r2 === "mi corazon") {
+            go('home');
         } else {
-            err.style.display = 'block';
+            document.getElementById('errorMsg').style.display = 'block';
         }
     }
 
-    function showPage(id) {
+    function go(id) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(id);
-        if(target) target.classList.add('active');
+        document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
 </script>

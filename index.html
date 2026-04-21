@@ -7,51 +7,31 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --betchi-dark: #070a16;
-      --betchi-blue: #0088ff;
-      --betchi-red: #ef4444;
-      --betchi-green: #22c55e;
-    }
-
+    :root { --betchi-dark: #070a16; --betchi-blue: #0088ff; --betchi-red: #ef4444; --betchi-green: #22c55e; }
     * { box-sizing: border-box; }
     body { background: var(--betchi-dark); color: #bdc5d1; font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
     .screen { min-height: 100vh; padding: 24px; }
     .hidden { display: none !important; }
     .betchi-title { font-size: 3.15rem; font-weight: 900; color: var(--betchi-blue); letter-spacing: -0.05em; line-height: 1.1; }
     .betchi-title-sm { font-size: 2.5rem; font-weight: 900; color: var(--betchi-blue); letter-spacing: -0.05em; line-height: 1.1; }
-    .terminal-subtitle, .airport-label, .info-label, .btn-nav, .bc-tag, .bc-tag-reload, .back-btn { font-family: 'Roboto Mono', monospace; }
+    .terminal-subtitle, .airport-label, .info-label, .btn-nav { font-family: 'Roboto Mono', monospace; }
     .terminal-subtitle { text-transform: uppercase; font-size: 1.2rem; letter-spacing: 0.1em; font-weight: 300; color: #64748b; margin-top: 10px; line-height: 1.5; }
-    .airport-label, .info-label { text-transform: uppercase; font-size: 11px; color: #64748b; letter-spacing: 0.15em; line-height: 1.6; }
-    .airport-label { color: #ffffff; margin-bottom: 8px; display: block; }
+    .airport-label { color: #ffffff; font-size: 11px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+    .info-label { text-transform: uppercase; font-size: 11px; color: #64748b; letter-spacing: 0.15em; }
     .info-value { color: white; font-weight: 900; font-size: 1.5rem; line-height: 1.2; text-transform: uppercase; }
     .icon-blue { filter: invert(37%) sepia(93%) saturate(3958%) hue-rotate(196deg) brightness(101%) contrast(107%); }
     .panel { width: 100%; max-width: 520px; margin: 0 auto; }
-    .input-field, textarea, input[type="date"], select { width: 100%; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(51, 65, 85, 0.5); color: white; border-radius: 1rem; padding: 16px 18px; outline: none; }
-    .input-field:focus, textarea:focus, input[type="date"]:focus, select:focus { border-color: var(--betchi-blue); }
-    .primary-btn { width: 100%; background: #2563eb; color: white; font-weight: 900; padding: 20px; border-radius: 1rem; letter-spacing: 0.2em; text-transform: uppercase; transition: all 0.2s ease; border: 0; cursor: pointer; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); }
-    .primary-btn:active { transform: scale(0.98); }
-    .back-btn { background: transparent; border: 1px solid rgba(0, 136, 255, 0.35); color: white; border-radius: 999px; padding: 10px 14px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+    .input-field, select { width: 100%; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(51, 65, 85, 0.5); color: white; border-radius: 1rem; padding: 16px 18px; outline: none; }
+    .primary-btn { width: 100%; background: #2563eb; color: white; font-weight: 900; padding: 20px; border-radius: 1rem; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
     .flap-board { display: flex; gap: 8px; justify-content: center; margin-top: 30px; }
-    .flap { width: 50px; height: 75px; background: #1a1e2e; border-radius: 6px; color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 3px solid #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-    .flap::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: rgba(0,0,0,0.8); z-index: 2; }
+    .flap { width: 50px; height: 75px; background: #1a1e2e; border-radius: 6px; color: white; font-size: 2rem; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 3px solid #000; }
     .spinning { animation: flip 0.15s infinite; }
     @keyframes flip { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(-180deg); } }
-    .btn-nav { background: transparent; border: 1px solid rgba(0, 136, 255, 0.4); transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; color: white; padding: 24px; border-radius: 1rem; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; cursor: pointer; }
     .success-bar { background: rgba(255,255,255,0.1); height: 4px; border-radius: 10px; width: 50%; margin: 12px auto 0; overflow: hidden; }
-    .success-fill { background: var(--betchi-red); height: 100%; transition: width 0.5s ease-out; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
-    .intro-text { color: var(--betchi-blue); font-weight: 700; font-size: 14px; letter-spacing: 0.05em; }
-    .service-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(51, 65, 85, 0.3); border-radius: 1.2rem; transition: all 0.2s ease; cursor: pointer; }
-    .service-card.selected { border-color: var(--betchi-blue); background: rgba(0, 136, 255, 0.1); }
-    .item-title { font-size: 10px; text-transform: uppercase; color: #64748b; margin-bottom: 2px; }
-    .item-subtitle { font-size: 15px; font-weight: 700; color: white; line-height: 1.3; display: block; }
-    .bc-tag, .bc-tag-reload { padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; white-space: nowrap; }
-    .bc-tag { background: rgba(0, 136, 255, 0.15); color: var(--betchi-blue); }
-    .bc-tag-reload { background: rgba(34, 197, 94, 0.15); color: var(--betchi-green); }
-    .btn-order { background: var(--betchi-blue); color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; border: 0; cursor: pointer; }
-    #success-message { background: rgba(34, 197, 94, 0.1); border: 1px solid var(--betchi-green); color: var(--betchi-green); }
-    .select-invisible { background: transparent !important; border: none !important; border-bottom: 1px solid rgba(51, 65, 85, 0.5) !important; border-radius: 0 !important; padding: 8px 0 !important; text-align-last: center; cursor: pointer; appearance: none; -webkit-appearance: none; }
+    .success-fill { background: var(--betchi-red); height: 100%; transition: width 0.5s ease-out; }
+    .select-invisible { background: transparent !important; border: none !important; border-bottom: 1px solid rgba(51, 65, 85, 0.5) !important; text-align-last: center; cursor: pointer; appearance: none; }
     select option { background: var(--betchi-dark); color: white; }
+    .btn-nav { background: transparent; border: 1px solid rgba(0, 136, 255, 0.4); color: white; padding: 20px; border-radius: 1rem; width: 100%; font-weight: 700; text-transform: uppercase; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -59,16 +39,15 @@
   <section id="login-screen" class="screen flex items-center justify-center">
     <div class="panel text-center">
       <div class="mb-10 flex flex-col items-center">
-        <img src="https://static.thenounproject.com/png/178847-200.png" alt="Avion Décollage" class="w-24 h-auto mb-6 icon-blue opacity-90">
+        <img src="https://static.thenounproject.com/png/178847-200.png" class="w-24 h-auto mb-6 icon-blue opacity-90">
         <h1 class="betchi-title">BETCHI.FR</h1>
         <p class="terminal-subtitle">Terminal de liaison<br>aérien privé</p>
-        <p class="mt-8 text-slate-400 font-medium max-w-xs mx-auto text-sm leading-relaxed">Répondez aux 2 questions pour<br>accéder à l'espace sécurisé 🔒</p>
       </div>
       <div class="max-w-sm mx-auto space-y-6">
-        <div class="text-left"><label class="airport-label">Un certain pilote a très envie de prendre l'avion.<br>Quelle est sa date de naissance ?</label>
-        <input type="text" id="pass-bday" placeholder="ex : 20/02/1989" class="input-field"></div>
+        <div class="text-left"><label class="airport-label">Date de naissance du pilote ?</label>
+        <input type="text" id="pass-bday" placeholder="ex : 16/05/1988" class="input-field"></div>
         <div class="text-left"><label class="airport-label">QUE HORA SON? 🎵</label>
-        <input type="text" id="pass-joke" placeholder="ex : Me Gustas Tu" class="input-field"></div>
+        <input type="text" id="pass-joke" placeholder="ex : mi corazon" class="input-field"></div>
         <button id="login-btn" class="primary-btn">Accéder</button>
         <div class="flap-board">
           <div class="flap" id="f1">?</div><div class="flap" id="f2">?</div><div class="flap" id="f3">?</div><div class="flap" id="f4">?</div><div class="flap" id="f5">?</div>
@@ -79,7 +58,10 @@
 
   <section id="dashboard-screen" class="screen hidden">
     <div class="panel text-center">
-      <header class="flex flex-col items-center mb-10"><img src="https://static.thenounproject.com/png/178847-200.png" alt="Avion" class="w-12 h-auto mb-2 icon-blue opacity-90"><h1 class="betchi-title-sm">BETCHI.FR</h1></header>
+      <header class="flex flex-col items-center mb-10">
+        <img src="https://static.thenounproject.com/png/178847-200.png" class="w-12 h-auto mb-2 icon-blue opacity-90">
+        <h1 class="betchi-title-sm">BETCHI.FR</h1>
+      </header>
       <div class="space-y-10 mb-14">
         <div><p class="info-label">Destination</p><p class="info-value text-blue-500">Big Love</p></div>
         <div><p class="info-label">État de l'appareil</p>
@@ -92,25 +74,19 @@
             <option value="1.7">Zone de turbulence</option><option value="10.3">Redresse la barre</option><option value="15">Maverick Mode</option>
           </select>
         </div>
-        <div><p class="info-label">Crédits disponibles</p><p class="info-value italic">20 <span class="text-blue-500 not-italic text-lg">BETcoins</span></p></div>
-        <div><p class="info-label">Taux de réussite estimé</p><p id="score-val" class="info-value">3.7%</p><div class="success-bar"><div id="score-bar" class="success-fill" style="width: 3.7%;"></div></div></div>
+        <div><p class="info-label">Taux de réussite estimé</p><p id="score-val" class="info-value">3.7%</p>
+          <div class="success-bar"><div id="score-bar" class="success-fill" style="width: 3.7%;"></div></div>
+        </div>
       </div>
-      <div class="flex flex-col gap-5">
-        <button class="btn-nav" id="btn-vol"><span class="text-xl">🗺️</span> Consulter le plan de vol</button>
-        <button class="btn-nav" id="btn-maint"><span class="text-xl">❤️</span> Faire de la maintenance</button>
-      </div>
+      <button class="btn-nav" onclick="location.reload()">🔄 Actualiser la liaison</button>
     </div>
-  </section>
-
-  <section id="maintenance-screen" class="screen hidden">
-      <div class="panel text-center"><button class="back-btn" id="back-to-dash">← Retour</button></div>
   </section>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // --- REMPLACE CES VALEURS PAR LES TIENNES ---
+    // --- REMPLACE PAR TES CLÉS ---
     const firebaseConfig = {
       apiKey: "AIzaSyA8g_oLQ5X7aiGK_m9eNos680MroG6djKY",
       authDomain: "betchi-b33f4.firebaseapp.com",
@@ -122,20 +98,21 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Navigation
+    // Fonction de changement d'écran
     function showScreen(id) {
-      ['login-screen', 'dashboard-screen', 'maintenance-screen'].forEach(s => document.getElementById(s).classList.add('hidden'));
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard-screen').classList.add('hidden');
       document.getElementById(id).classList.remove('hidden');
     }
 
-    // Mise à jour Score (Locale + Firebase)
+    // Sauvegarde vers Firebase
     window.updateScore = function() {
       const appVal = document.getElementById('select-appareil').value;
       const pilVal = document.getElementById('select-pilote').value;
       set(ref(db, 'etat_vol/'), { appareil: appVal, pilote: pilVal });
     };
 
-    // Écoute Firebase
+    // Lecture de Firebase (Temps réel)
     onValue(ref(db, 'etat_vol/'), (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -148,17 +125,43 @@
       }
     });
 
-    // Attachement des événements (Obligatoire avec type="module")
-    document.getElementById('login-btn').onclick = validateAccess;
-    document.getElementById('select-appareil').onchange = updateScore;
-    document.getElementById('select-pilote').onchange = updateScore;
-    document.getElementById('btn-maint').onclick = () => showScreen('maintenance-screen');
-    document.getElementById('back-to-dash').onclick = () => showScreen('dashboard-screen');
-
+    // Validation Login
     function validateAccess() {
-      // (Ton code de validation habituel ici...)
-      // À la fin de l'animation, utilise showScreen('dashboard-screen');
+      const bday = document.getElementById('pass-bday').value;
+      const joke = document.getElementById('pass-joke').value.toLowerCase();
+      const btn = document.getElementById('login-btn');
+
+      if (bday.includes("16/05") && (joke.includes("corazon") || joke.includes("corazón"))) {
+        btn.innerText = "Identification...";
+        btn.disabled = true;
+
+        const symbols = ['✈️', '☀️', '❤️', '🍷', '🍑'];
+        [1,2,3,4,5].forEach((id, i) => {
+          const flap = document.getElementById('f' + id);
+          flap.classList.add('spinning');
+          setTimeout(() => {
+            flap.classList.remove('spinning');
+            flap.innerText = symbols[i];
+            flap.style.borderColor = "#0088ff";
+          }, 1000 + (i * 350));
+        });
+
+        setTimeout(() => { showScreen('dashboard-screen'); }, 3500);
+      } else {
+        btn.innerText = "ÉCHEC DE SÉCURITÉ";
+        btn.style.backgroundColor = "#ef4444";
+        setTimeout(() => {
+          btn.innerText = "Accéder";
+          btn.style.backgroundColor = "#2563eb";
+        }, 1500);
+      }
     }
+
+    // Liaison des boutons (Obligatoire en mode module)
+    document.getElementById('login-btn').onclick = validateAccess;
+    document.getElementById('select-appareil').onchange = window.updateScore;
+    document.getElementById('select-pilote').onchange = window.updateScore;
+
   </script>
 </body>
 </html>
